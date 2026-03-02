@@ -10,6 +10,7 @@ router = APIRouter(prefix="/auth", tags=["auth"])
 oauth_complete_router = APIRouter(prefix="/oauth/complete", tags=["auth"])
 
 load_dotenv()
+APP_BASE_URL = "https://tinyman-d9ka.onrender.com"
 
 PROVIDERS = {
     "google": {
@@ -19,7 +20,7 @@ PROVIDERS = {
         "client_id": os.getenv("GOOGLE_CLIENT_ID"),
         "client_secret": os.getenv("GOOGLE_CLIENT_SECRET"),
         "scope": "openid email profile",
-        "redirect_uri": "http://localhost:8000/auth/google/callback"
+        "redirect_uri": f"{APP_BASE_URL}/auth/google/callback"
     },
     "github": {
         "auth_url": "https://github.com/login/oauth/authorize",
@@ -28,7 +29,7 @@ PROVIDERS = {
         "client_id": os.getenv("GITHUB_CLIENT_ID"),
         "client_secret": os.getenv("GITHUB_CLIENT_SECRET"),
         "scope": "user:email",
-        "redirect_uri": "http://localhost:8000/auth/github/callback"
+        "redirect_uri": f"{APP_BASE_URL}/auth/github/callback"
     },
     "gitlab": {
         "auth_url": "https://gitlab.com/oauth/authorize",
@@ -37,7 +38,7 @@ PROVIDERS = {
         "client_id": os.getenv("GITLAB_CLIENT_ID"),
         "client_secret": os.getenv("GITLAB_CLIENT_SECRET"),
         "scope": "read_user",
-        "redirect_uri": "http://localhost:8000/auth/gitlab/callback"
+        "redirect_uri": f"{APP_BASE_URL}/auth/gitlab/callback"
     }
 }
 
