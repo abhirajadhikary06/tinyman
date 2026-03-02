@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>tinyman</title>
+<link rel="icon" type="image/x-icon" href="/static/images/favicon.ico?v=1">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{
+  width:100vw;height:100vh;overflow:hidden;background:#1a1a28;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Press Start 2P',monospace;
+}
+#wrap{
+  position:relative;
+  width:min(900px,96vw);
+  height:min(580px,82vh);
+  aspect-ratio:900 / 580;
+  max-width:900px;
+  max-height:580px;
+  box-shadow:0 0 0 3px #111,0 0 0 6px #222,0 30px 80px #00000088;
+  overflow:hidden;
+  cursor:none;
+}
+canvas{position:absolute;top:0;left:0;width:100%;height:100%;image-rendering:pixelated;image-rendering:crisp-edges;}
+#bg{z-index:1;}
+#ov{z-index:10;pointer-events:none;}
+
+/* ── CUSTOM CURSOR ── */
+#cursor{
+  position:absolute;z-index:100;pointer-events:none;
+  width:14px;height:14px;margin:-7px 0 0 -7px;
+}
+.cur-dot{
+  position:absolute;top:50%;left:50%;
+  width:6px;height:6px;background:#fff;
+  transform:translate(-50%,-50%);
+  image-rendering:pixelated;
+  box-shadow:0 0 4px rgba(255,255,255,.6);
+}
+.cur-ring{
+  position:absolute;inset:0;
+  border:2px solid rgba(255,255,255,.4);
+}
+
+/* ── PLAYER (CSS pixel art) ── */
+#player{
+  position:absolute;z-index:30;pointer-events:none;
+  width:20px;height:26px;
+  transform-origin:50% 100%;
+}
+.sprite{
+  position:relative;width:1px;height:1px;
+  image-rendering:pixelated;
+}
+.sp-hair{
+  position:absolute;
+  width:14px;height:6px;top:0;left:3px;
+  background:#2a1a08;
+}
+.sp-face{
+  position:absolute;
+  width:14px;height:10px;top:6px;left:3px;
+  background:#f5b87a;
+}
+.sp-eyes{
+  position:absolute;
+  top:10px;left:6px;
+  width:2px;height:2px;background:#1a1020;
+  box-shadow:6px 0 0 #1a1020;
+}
+.sp-shirt{
+  position:absolute;
+  top:16px;left:2px;
+  width:16px;height:8px;background:#3a7acc;
+}
+.sp-legs{
+  position:absolute;
+  top:22px;left:4px;
+  width:5px;height:5px;background:#222;
+  box-shadow:
+    7px 0 0 #222,
+    0 3px 0 #333,7px 3px 0 #333;
+}
+#nametag{
+  position:absolute;z-index:31;pointer-events:none;
+  white-space:nowrap;
+  background:rgba(0,0,0,.75);
+  border:1.5px solid rgba(255,255,255,.3);
+  color:#fff;font-size:5px;
+  padding:2px 5px;
+  transform:translateX(-50%);
+}
+
+/* ── HUD ── */
+#hud{
+  position:absolute;top:10px;left:12px;z-index:50;pointer-events:none;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:6px;
+  max-width:60%;
+}
+.hud-logo{
+  font-size:13px;
+  line-height:1.25;
+  color:#fff;
+  text-shadow:2px 2px 0 #000,4px 4px 0 rgba(0,0,0,.3);
+}
+.hud-sub{
+  font-size:5px;
+  line-height:1.7;
+  color:rgba(255,255,255,.5);
+  letter-spacing:1.6px;
+  white-space:normal;
+}
+
+/* ── MINIMAP ── */
+#mmap-wrap{
+  position:absolute;top:10px;right:12px;z-index:50;
+  border:2px solid #333;background:#0a0a12;
+  padding:2px;pointer-events:none;
+}
+#mmap{display:block;image-rendering:pixelated;}
+
+/* ── KEYS HINT ── */
+#keyhint{
+  position:absolute;bottom:12px;right:12px;z-index:50;
+  pointer-events:none;text-align:right;
+}
+.kh{display:block;font-size:5px;color:rgba(255,255,255,.25);line-height:2.2;}
+
+/* ── DIALOG POPUP ── */
+#dialog{
+  position:absolute;bottom:0;left:0;right:0;z-index:60;
+  background:#0d0e18;
+  border-top:3px solid #fff;
+  transform:translateY(100%);
+  transition:transform .18s cubic-bezier(.17,.67,.35,1.2);
+  display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap;
+  padding:14px 20px 16px;
+  box-shadow:0 -8px 30px rgba(0,0,0,.5);
+}
+#dialog.open{transform:translateY(0);}
+
+.d-logo-wrap{
+  flex-shrink:0;width:52px;height:52px;
+  border:2px solid rgba(255,255,255,.1);
+  background:rgba(255,255,255,.05);
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+}
+.d-logo-wrap img{width:36px;height:36px;object-fit:contain;image-rendering:pixelated;}
+.d-logo-fallback{font-size:22px;line-height:1;}
+
+.d-info{flex:1 1 340px;min-width:260px;}
+.d-name{font-size:8px;margin-bottom:5px;line-height:1.4;}
+.d-term{
+  font-size:5px;color:rgba(255,255,255,.45);
+  line-height:1.8;font-family:'Press Start 2P',monospace;
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+  max-height:72px;
+  overflow:auto;
+}
+.d-term .g{color:#7fff00;}
+.d-term .b{color:#4af;}
+
+.d-action{flex-shrink:0;display:flex;flex-direction:column;gap:6px;align-items:flex-end;justify-content:flex-start;}
+#d-btn{
+  font-family:'Press Start 2P',monospace;
+  font-size:6px;padding:10px 12px;
+  border:3px solid;cursor:pointer;
+  text-decoration:none;display:inline-block;
+  letter-spacing:1px;white-space:nowrap;
+  transition:none;
+  position:relative;
+}
+#d-btn::after{
+  content:'';position:absolute;
+  right:-5px;bottom:-5px;
+  width:100%;height:100%;
+  z-index:-1;
+}
+#d-btn:hover{transform:translate(-2px,-2px);}
+#d-btn:hover::after{display:block;}
+#d-btn:active{transform:translate(2px,2px);}
+#d-btn:active::after{display:none;}
+.d-esc{font-size:5px;color:rgba(255,255,255,.2);}
+
+/* ── SCREEN TRANSITION ── */
+#cover{
+  position:fixed;inset:0;background:#000;
+  opacity:0;pointer-events:none;
+  transition:opacity .4s;z-index:999;
+}
+#cover.on{opacity:1;}
+
+@media (max-width: 980px){
+  #hud{top:8px;left:8px;}
+  .hud-logo{font-size:10px;}
+  .hud-sub{font-size:4px;line-height:1.5;letter-spacing:1px;}
+  #mmap-wrap{top:8px;right:8px;}
+  #keyhint{display:none;}
+  #dialog{padding:10px 12px 12px;gap:10px;}
+  .d-logo-wrap{width:42px;height:42px;}
+  .d-logo-wrap img{width:28px;height:28px;}
+  .d-logo-fallback{font-size:16px;}
+  .d-name{font-size:7px;}
+  .d-term{font-size:4px;max-height:64px;}
+  #d-btn{font-size:5px;padding:8px 10px;}
+  .d-esc{font-size:4px;}
+}
+
+@media (max-width: 760px), (max-height: 560px){
+  #hud{gap:3px;max-width:68%;}
+  .hud-logo{font-size:8px;line-height:1.2;}
+  .hud-sub{font-size:3.5px;line-height:1.35;letter-spacing:.6px;}
+}
+</style>
+</head>
+<body>
+<div id="wrap">
+  <canvas id="bg" width="900" height="580"></canvas>
+  <canvas id="ov" width="900" height="580"></canvas>
+
+  <!-- HUD -->
+  <div id="hud">
+    <div class="hud-logo">tinyman</div>
+  </div>
+
+  <!-- Minimap -->
+  <div id="mmap-wrap">
+    <canvas id="mmap" width="90" height="58"></canvas>
+  </div>
+
+  <!-- Key hints -->
+  <div id="keyhint">
+    <span class="kh">WASD / ARROWS — MOVE</span>
+    <span class="kh">CLICK — WALK TO POINT</span>
+    <span class="kh">ENTER OFFICE — LOGIN</span>
+  </div>
+
+  <!-- Custom cursor -->
+  <div id="cursor">
+    <div class="cur-ring"></div>
+    <div class="cur-dot"></div>
+  </div>
+
+  <!-- Player (no shadow element) -->
+  <div id="player">
+    <div class="sprite">
+      <div class="sp-hair"></div>
+      <div class="sp-face"></div>
+      <div class="sp-eyes"></div>
+      <div class="sp-shirt"></div>
+      <div class="sp-legs"></div>
+    </div>
+  </div>
+  <div id="nametag">YOU</div>
+
+  <!-- Dialog -->
+  <div id="dialog">
+    <div class="d-logo-wrap" id="d-logo-wrap">
+      <img id="d-logo-img" src="" alt="" onerror="this.style.display='none';document.getElementById('d-logo-fb').style.display='block'">
+      <div id="d-logo-fb" class="d-logo-fallback" style="display:none"></div>
+    </div>
+    <div class="d-info">
+      <div class="d-name" id="d-name">Office Name</div>
+      <div class="d-term" id="d-term"></div>
+    </div>
+    <div class="d-action">
+      <a id="d-btn" href="#">LOGIN</a>
+      <span class="d-esc">WALK AWAY TO CLOSE</span>
+    </div>
+  </div>
+</div>
+
+<div id="cover"></div>
+
+<script>
+// ── JWT CAPTURE ──────────────────────────────────────────────
+(()=>{
+  const t=new URLSearchParams(location.search).get('token');
+  if(t){localStorage.setItem('jwt_token',t);document.getElementById('cover').classList.add('on');setTimeout(()=>{location.href='main.html';},500);}
+})();
+
+// ── CONSTANTS ────────────────────────────────────────────────
+const W=900,H=580,T=16;
+
+// ── COLOR UTILITIES ──────────────────────────────────────────
+function shade(col,amt){
+  let c=col.replace('#','');
+  if(c.length===3)c=c[0]+c[0]+c[1]+c[1]+c[2]+c[2];
+  let r=parseInt(c.slice(0,2),16),g=parseInt(c.slice(2,4),16),b=parseInt(c.slice(4,6),16);
+  r=Math.max(0,Math.min(255,Math.round(r+(255*amt))));
+  g=Math.max(0,Math.min(255,Math.round(g+(255*amt))));
+  b=Math.max(0,Math.min(255,Math.round(b+(255*amt))));
+  return`rgb(${r},${g},${b})`;
+}
+
+// ── CANVAS SETUP ─────────────────────────────────────────────
+const bg=document.getElementById('bg');const bc=bg.getContext('2d');bc.imageSmoothingEnabled=false;
+const ov=document.getElementById('ov');const oc=ov.getContext('2d');oc.imageSmoothingEnabled=false;
+const mm=document.getElementById('mmap');const mc=mm.getContext('2d');mc.imageSmoothingEnabled=false;
+
+// ── DRAWING PRIMITIVES ───────────────────────────────────────
+const p=(v)=>Math.floor(v);
+
+function rect(c,x,y,w,h,col){c.fillStyle=col;c.fillRect(p(x),p(y),w,h);}
+
+function tileFloor(c,x,y,w,h,c1,c2,ts=T){
+  for(let ty=0;ty<h;ty+=ts)for(let tx=0;tx<w;tx+=ts){
+    const even=(Math.floor(tx/ts)+Math.floor(ty/ts))%2===0;
+    rect(c,x+tx,y+ty,Math.min(ts,w-tx),Math.min(ts,h-ty),even?c1:c2);
+  }
+}
+
+function linedFloor(c,x,y,w,h,base,line,ts=T){
+  rect(c,x,y,w,h,base);
+  c.strokeStyle=line;c.lineWidth=1;
+  for(let tx=x;tx<=x+w;tx+=ts){c.beginPath();c.moveTo(p(tx)+.5,y);c.lineTo(p(tx)+.5,y+h);c.stroke();}
+  for(let ty=y;ty<=y+h;ty+=ts){c.beginPath();c.moveTo(x,p(ty)+.5);c.lineTo(x+w,p(ty)+.5);c.stroke();}
+}
+
+function drawWall(c,x,y,w,h,wallCol,hlCol='rgba(255,255,255,.08)',sdCol='rgba(0,0,0,.3)'){
+  rect(c,x,y,w,h,wallCol);
+  rect(c,x,y,w,2,hlCol);
+  rect(c,x,y,2,h,hlCol);
+  rect(c,x,y+h-2,w,2,sdCol);
+  rect(c,x+w-2,y,2,h,sdCol);
+}
+
+function drawWindow(c,x,y,w,h=10){
+  rect(c,x,y,w,h,'#a8d8f0');
+  rect(c,x,y,w,2,'#d0eeff');
+  rect(c,x+1,y+h-2,w-2,2,'#7abedc');
+  c.strokeStyle='rgba(0,0,0,.4)';c.lineWidth=1;
+  c.strokeRect(p(x)+.5,p(y)+.5,w-1,h-1);
+  rect(c,x+Math.floor(w/2),y,1,h,'rgba(0,0,0,.25)');
+}
+
+function drawDesk(c,x,y,w=48,h=28,col='#a0793c'){
+  const dk=shade(col,-0.2),lt=shade(col,0.15);
+  rect(c,x,y,w,h,col);
+  rect(c,x,y,w,2,lt);
+  rect(c,x,y,2,h,lt);
+  rect(c,x,y+h-3,w,3,dk);
+  rect(c,x+w-2,y,2,h,dk);
+  c.strokeStyle='rgba(0,0,0,.35)';c.lineWidth=1;
+  c.strokeRect(p(x)+.5,p(y)+.5,w-1,h-1);
+}
+
+function drawMonitor(c,x,y,screenCol='#1a2a4a'){
+  rect(c,x,y,26,18,'#1a1a20');
+  rect(c,x+1,y+1,24,16,'#111');
+  rect(c,x+2,y+2,22,13,screenCol);
+  c.fillStyle='rgba(100,180,255,.7)';
+  for(let i=0;i<3;i++)c.fillRect(p(x+4),p(y+4+i*4),8+i*3,1);
+  rect(c,x+10,y+18,6,3,'#2a2a30');
+  rect(c,x+7,y+21,12,2,'#333');
+}
+
+function drawChair(c,x,y,col='#3a3a50'){
+  c.fillStyle=col;c.beginPath();c.ellipse(p(x+8),p(y+8),7,7,0,0,Math.PI*2);c.fill();
+  c.strokeStyle='rgba(0,0,0,.4)';c.lineWidth=1;c.stroke();
+  c.fillStyle='rgba(255,255,255,.12)';c.beginPath();c.ellipse(p(x+6),p(y+6),3,3,0,0,Math.PI*2);c.fill();
+  rect(c,x+1,y-4,14,5,shade(col,-0.1));
+  c.strokeStyle='rgba(0,0,0,.3)';c.lineWidth=1;c.strokeRect(p(x+1)+.5,p(y-4)+.5,13,4);
+}
+
+function drawShelfSeeded(c,x,y,w=64,h=20,seed=0){
+  rect(c,x,y,w,h,'#7a5530');
+  for(let i=T;i<w;i+=T){rect(c,x+i,y,1,h,'rgba(0,0,0,.3)');}
+  const bookCols=['#c0392b','#2980b9','#27ae60','#f39c12','#8e44ad','#16a085','#e74c3c','#3498db','#e67e22','#1abc9c'];
+  let rng=seed;
+  const rand=()=>{rng=(rng*1664525+1013904223)&0xffffffff;return(rng>>>0)/0xffffffff;};
+  for(let i=0;i<Math.floor(w/7);i++){
+    const bx=x+i*7+1,by=y+2,bh=Math.floor(h-4-rand()*3);
+    rect(c,bx,by,5,bh,bookCols[Math.floor(rand()*bookCols.length)]);
+    rect(c,bx,by,5,2,'rgba(255,255,255,.2)');
+  }
+  rect(c,x,y,w,2,'rgba(255,255,255,.15)');
+}
+
+function drawPlant(c,x,y,type=0){
+  if(type===0){
+    c.fillStyle='#4aaa4a';c.beginPath();c.ellipse(p(x+8),p(y+8),7,6,0,0,Math.PI*2);c.fill();
+    c.fillStyle='#3a8a3a';c.beginPath();c.ellipse(p(x+6),p(y+7),4,4,0,0,Math.PI*2);c.fill();
+    c.fillStyle='#2a5a2a';c.beginPath();c.ellipse(p(x+10),p(y+9),3,3,0,0,Math.PI*2);c.fill();
+    rect(c,x+4,y+13,8,5,'#a06030');
+    rect(c,x+3,y+13,10,2,'#c07848');
+  } else if(type===1){
+    rect(c,x+5,y+6,6,10,'#2d6a2d');
+    rect(c,x+3,y+2,10,8,'#3a8a3a');
+    rect(c,x+5,y,6,6,'#4aaa4a');
+    rect(c,x+6,y+14,4,4,'#a06030');
+    rect(c,x+5,y+14,6,2,'#c07848');
+  } else {
+    rect(c,x+3,y+8,10,6,'#a06030');
+    rect(c,x+2,y+8,12,2,'#c07848');
+    rect(c,x+5,y+3,6,7,'#4aaa4a');
+    rect(c,x+3,y+5,4,5,'#3a8a3a');
+    rect(c,x+9,y+5,4,5,'#3a8a3a');
+    rect(c,x+4,y+2,8,4,'#5aba5a');
+  }
+}
+
+function drawCoffee(c,x,y){
+  rect(c,x,y,20,24,'#2a2a30');
+  rect(c,x+1,y+1,18,22,'#333340');
+  rect(c,x+2,y+2,16,10,'#c0392b');
+  rect(c,x+3,y+3,14,8,'#e74c3c');
+  rect(c,x+4,y+4,12,5,'rgba(255,255,255,.15)');
+  rect(c,x+7,y+13,6,4,'#1a1a20');
+  rect(c,x+6,y+17,8,5,'#7a5530');
+  rect(c,x+7,y+18,6,3,'#3a2010');
+}
+
+function drawWaterCooler(c,x,y){
+  rect(c,x+3,y,10,10,'#a8d8f0');
+  rect(c,x+4,y+1,8,8,'#c8eeff');
+  rect(c,x+5,y+2,6,5,'rgba(255,255,255,.3)');
+  rect(c,x+2,y+10,12,16,'#e8e8f0');
+  rect(c,x+3,y+11,10,14,'#f0f0f8');
+  rect(c,x+3,y+14,10,6,'rgba(0,100,200,.1)');
+  rect(c,x+2,y+23,5,3,'#c0392b');
+  rect(c,x+9,y+23,5,3,'#2980b9');
+  rect(c,x+1,y+26,14,2,'#ccc');
+}
+
+function drawSofa(c,x,y,w=64,h=24,col='#5a3a8a'){
+  const lt=shade(col,0.2),dk=shade(col,-0.2);
+  rect(c,x,y,w,h,col);
+  rect(c,x,y,w,5,lt);
+  rect(c,x,y,5,h,lt);
+  rect(c,x+w-5,y,5,h,lt);
+  const mid=Math.floor(w/2);
+  rect(c,x+6,y+6,mid-8,h-10,lt);
+  rect(c,x+mid+2,y+6,mid-8,h-10,lt);
+  rect(c,x+6,y+6,mid-8,2,shade(col,0.3));
+  rect(c,x+mid+2,y+6,mid-8,2,shade(col,0.3));
+  c.strokeStyle='rgba(0,0,0,.2)';c.lineWidth=1;
+  c.strokeRect(p(x)+.5,p(y)+.5,w-1,h-1);
+}
+
+function drawTable(c,x,y,r=16,col='#a0793c'){
+  c.fillStyle=col;c.beginPath();c.ellipse(p(x),p(y),r,r*.7,0,0,Math.PI*2);c.fill();
+  c.fillStyle=shade(col,0.25);c.beginPath();c.ellipse(p(x-r*.2),p(y-r*.15),r*.4,r*.3,0,0,Math.PI*2);c.fill();
+  c.strokeStyle='rgba(0,0,0,.3)';c.lineWidth=1.5;
+  c.beginPath();c.ellipse(p(x),p(y),r,r*.7,0,0,Math.PI*2);c.stroke();
+}
+
+function drawNameplate(c,x,y,text){
+  const w=text.length*5+10;
+  rect(c,x-w/2,y,w,11,'rgba(20,20,30,.85)');
+  c.strokeStyle='rgba(255,255,255,.25)';c.lineWidth=1;
+  c.strokeRect(p(x-w/2)+.5,p(y)+.5,w-1,10);
+  c.fillStyle='#4af';c.beginPath();c.ellipse(p(x-w/2+6),p(y+5),2,2,0,0,Math.PI*2);c.fill();
+  c.fillStyle='#fff';c.font='5px "Press Start 2P"';c.textAlign='center';
+  c.fillText(text,x,y+8);
+}
+
+function drawVending(c,x,y){
+  rect(c,x,y,20,32,'#1a3a6a');
+  rect(c,x+1,y+1,18,30,'#1e4080');
+  for(let row=0;row<3;row++){
+    for(let col=0;col<2;col++){
+      const sx=x+3+col*8,sy=y+3+row*8;
+      rect(c,sx,sy,6,6,'rgba(0,0,0,.4)');
+      const snackCols=['#e74c3c','#f39c12','#2ecc71','#3498db','#9b59b6','#1abc9c'];
+      rect(c,sx+1,sy+1,4,4,snackCols[(row*2+col)%snackCols.length]);
+    }
+  }
+  rect(c,x+6,y+26,8,2,'#aaa');
+  rect(c,x+2,y+28,16,4,'#111');
+}
+
+function drawLocker(c,x,y,col='#3a6a9a'){
+  rect(c,x,y,14,24,col);
+  rect(c,x+1,y+1,12,10,shade(col,-0.15));
+  rect(c,x+1,y+13,12,10,shade(col,-0.15));
+  rect(c,x,y+12,14,1,'rgba(0,0,0,.5)');
+  rect(c,x+5,y+5,4,2,'#ccc');
+  rect(c,x+5,y+18,4,2,'#ccc');
+  rect(c,x,y,14,2,shade(col,0.2));
+}
+
+function drawTree(c,x,y){
+  c.fillStyle='rgba(0,0,0,.2)';c.beginPath();c.ellipse(p(x),p(y+2),10,5,0,0,Math.PI*2);c.fill();
+  rect(c,x-3,y-5,6,6,'#7a4a1a');
+  c.fillStyle='#2d7a2d';c.beginPath();c.ellipse(p(x),p(y-14),12,9,0,0,Math.PI*2);c.fill();
+  c.fillStyle='#3a9a3a';c.beginPath();c.ellipse(p(x-2),p(y-17),8,7,0,0,Math.PI*2);c.fill();
+  c.fillStyle='#4aba4a';c.beginPath();c.ellipse(p(x+1),p(y-20),6,5,0,0,Math.PI*2);c.fill();
+  c.fillStyle='#5ad05a';c.beginPath();c.ellipse(p(x),p(y-22),3,3,0,0,Math.PI*2);c.fill();
+}
+
+function drawRug(c,x,y,w,h,col){
+  rect(c,x,y,w,h,col);
+  rect(c,x+3,y+3,w-6,h-6,shade(col,0.15));
+  c.strokeStyle=shade(col,0.3);c.lineWidth=1;
+  c.strokeRect(p(x+1)+.5,p(y+1)+.5,w-2,h-2);
+  c.strokeRect(p(x+4)+.5,p(y+4)+.5,w-8,h-8);
+}
+
+// ── OFFICE DEFINITIONS ────────────────────────────────────────
+const OFFICES=[
+  {
+    id:'google',label:'GOOGLE HQ',
+    x:8,y:40,w:274,h:215,
+    floor1:'#e8f0e0',floor2:'#dce8d4',
+    wall:'#4285f4',wallLt:'#6aa3ff',wallDk:'#2a6ad9',
+    accent:'#34a853',
+    logoSrc:'/static/images/google.png',logoFb:'G',
+    nameColor:'#4285f4',
+    oauth:'/auth/google',
+    btnBg:'#4285f4',btnFg:'#fff',btnBd:'#2a6ad9',btnSh:'#1a4aaa',
+    btnText:'SIGN IN WITH GOOGLE',
+    term:'> WORKSPACE DETECTED\n> OAUTH 2.0 READY\n> SCOPE: profile email',
+    desks:[
+      {x:24,y:68,w:50,h:26},{x:88,y:68,w:50,h:26},
+      {x:152,y:68,w:50,h:26},{x:216,y:68,w:50,h:26},
+      {x:24,y:155,w:50,h:26},{x:88,y:155,w:50,h:26},
+      {x:152,y:155,w:50,h:26},
+    ],
+    plants:[{x:20,y:52,t:0},{x:240,y:52,t:2},{x:245,y:175,t:1},{x:18,y:172,t:2}],
+    shelves:[{x:22,y:98,w:240}],
+    npcs:[{x:55,y:90,name:'Krzysiek'},{x:185,y:90,name:'Roman'},{x:55,y:175,name:'Mateusz'},{x:120,y:175,name:'Tomek D.'}],
+    extras:['coffee','cooler'],
+  },
+  {
+    id:'github',label:'GITHUB HQ',
+    x:292,y:40,w:274,h:215,
+    floor1:'#181e28',floor2:'#141a24',
+    wall:'#30363d',wallLt:'#484f58',wallDk:'#21262d',
+    accent:'#58a6ff',
+    logoSrc:'/static/images/github.png',logoFb:'GH',
+    nameColor:'#58a6ff',
+    oauth:'/auth/github',
+    btnBg:'#21262d',btnFg:'#f0f6fc',btnBd:'#58a6ff',btnSh:'#0d1117',
+    btnText:'SIGN IN WITH GITHUB',
+    term:'> OAUTH APP DETECTED\n> SCOPE: user repo\n> TOKEN: awaiting auth',
+    desks:[
+      {x:308,y:68,w:50,h:26},{x:372,y:68,w:50,h:26},
+      {x:436,y:68,w:50,h:26},{x:500,y:68,w:50,h:26},
+      {x:308,y:155,w:50,h:26},{x:372,y:155,w:50,h:26},
+      {x:436,y:155,w:50,h:26},
+    ],
+    plants:[{x:304,y:52,t:1},{x:524,y:52,t:0},{x:526,y:172,t:2},{x:302,y:172,t:1}],
+    shelves:[{x:306,y:98,w:240}],
+    npcs:[{x:340,y:90,name:'Alan'},{x:470,y:90,name:'Adrian'},{x:340,y:175,name:'Maciek'},{x:405,y:175,name:'Pati'}],
+    extras:[],
+  },
+  {
+    id:'gitlab',label:'GITLAB HQ',
+    x:576,y:40,w:274,h:215,
+    floor1:'#28180a',floor2:'#231408',
+    wall:'#e24329',wallLt:'#ff6347',wallDk:'#aa2a10',
+    accent:'#fca326',
+    logoSrc:'/static/images/gitlab.png',logoFb:'GL',
+    nameColor:'#e24329',
+    oauth:'/auth/gitlab',
+    btnBg:'#e24329',btnFg:'#fff',btnBd:'#fca326',btnSh:'#8a1a08',
+    btnText:'SIGN IN WITH GITLAB',
+    term:'> GITLAB DETECTED\n> OAUTH 2.0 READY\n> SCOPE: api read_user',
+    desks:[
+      {x:592,y:68,w:50,h:26},{x:656,y:68,w:50,h:26},
+      {x:720,y:68,w:50,h:26},{x:784,y:68,w:50,h:26},
+      {x:592,y:155,w:50,h:26},{x:656,y:155,w:50,h:26},
+      {x:720,y:155,w:50,h:26},
+    ],
+    plants:[{x:588,y:52,t:2},{x:812,y:52,t:0},{x:810,y:172,t:1},{x:586,y:172,t:0}],
+    shelves:[{x:590,y:98,w:240}],
+    npcs:[{x:625,y:90,name:'Szymon'},{x:755,y:90,name:'Mikołaj'},{x:625,y:175,name:'Rode'},{x:690,y:175,name:'Manu'}],
+    extras:['vending'],
+  }
+];
+
+function doorZone(o){return{x:o.x+o.w/2-24,y:o.y+o.h-8,w:48,h:52};}
+
+// ── DRAW STATIC BACKGROUND ────────────────────────────────────
+function drawBG(){
+  // Outer corridor floor
+  linedFloor(bc,0,0,W,H,'#2e303e','rgba(0,0,0,.2)',T);
+
+  // Top hallway strip
+  tileFloor(bc,0,0,W,40,'#3a3c4e','#363848',T);
+  // Top wall
+  drawWall(bc,0,0,W,8,'#1e2030','rgba(255,255,255,.04)');
+
+  // ── TOP HALLWAY OBJECTS ──
+  // Lockers start further right so they don't overlap the HUD area (left ~160px)
+  for(let i=0;i<3;i++)drawLocker(bc,170+i*15,4);
+  drawWaterCooler(bc,222,4);
+  drawCoffee(bc,252,8);
+  // Right side hallway objects (unchanged)
+  for(let i=0;i<3;i++)drawLocker(bc,770-i*15,4);
+  drawVending(bc,820,4);
+
+  // ── OFFICE ROOMS ──
+  OFFICES.forEach(o=>{
+    tileFloor(bc,o.x+8,o.y+8,o.w-16,o.h-16,o.floor1,o.floor2,T);
+
+    drawWall(bc,o.x,o.y,o.w,8,o.wall,o.wallLt);
+    drawWall(bc,o.x,o.y+o.h-8,o.w,8,o.wallDk);
+    drawWall(bc,o.x,o.y,8,o.h,o.wall,o.wallLt);
+    drawWall(bc,o.x+o.w-8,o.y,8,o.h,o.wall,o.wallLt);
+
+    const dc=o.x+o.w/2;
+    rect(bc,dc-22,o.y+o.h-8,44,8,o.floor2);
+    rect(bc,dc-24,o.y+o.h-10,4,10,o.wallDk);
+    rect(bc,dc+20,o.y+o.h-10,4,10,o.wallDk);
+    rect(bc,dc-22,o.y+o.h,44,4,o.accent);
+    rect(bc,dc-22,o.y+o.h,44,1,'rgba(255,255,255,.3)');
+
+    for(let wx=o.x+20;wx<o.x+o.w-20;wx+=36){drawWindow(bc,wx,o.y,22);}
+
+    const sw=o.label.length*6+20;
+    rect(bc,dc-sw/2,o.y-20,sw,18,o.wall);
+    rect(bc,dc-sw/2,o.y-20,sw,2,o.wallLt);
+    bc.fillStyle='#fff';bc.font='6px "Press Start 2P"';bc.textAlign='center';
+    bc.fillText(o.label,dc,o.y-7);
+    rect(bc,dc-4,o.y-2,8,2,o.accent);
+
+    o.shelves.forEach(s=>drawShelfSeeded(bc,s.x,s.y,s.w,18,o.x));
+
+    o.desks.forEach((d,i)=>{
+      drawChair(bc,d.x+16,d.y+22,i%2===0?'#3a3a50':'#4a3a40');
+      drawDesk(bc,d.x,d.y,d.w,d.h,i<4?'#8a6830':'#7a5820');
+      drawMonitor(bc,d.x+4,d.y-16,i%3===0?'#1a2a4a':i%3===1?'#1a3a2a':'#2a1a3a');
+    });
+
+    o.plants.forEach(pl=>drawPlant(bc,pl.x,pl.y,pl.t));
+
+    if(o.extras&&o.extras.includes('coffee')){drawCoffee(bc,o.x+o.w-34,o.y+o.h-40);}
+    if(o.extras&&o.extras.includes('cooler')){drawWaterCooler(bc,o.x+o.w-58,o.y+o.h-40);}
+    if(o.extras&&o.extras.includes('vending')){drawVending(bc,o.x+o.w-30,o.y+20);}
+
+    o.npcs.forEach(n=>drawNPCStatic(bc,n.x,n.y,n.name,o.accent));
+  });
+
+  // Middle corridor
+  const mc2y=255;
+  tileFloor(bc,0,mc2y,W,35,'#383a4a','#343648',T);
+  for(let tx=80;tx<W-60;tx+=120)drawPlant(bc,tx,mc2y+4,tx%3);
+  drawWaterCooler(bc,50,mc2y+4);
+  drawWaterCooler(bc,W-68,mc2y+4);
+  for(let ax=200;ax<700;ax+=80){
+    bc.fillStyle='rgba(255,255,255,.07)';bc.textAlign='center';
+    bc.beginPath();bc.moveTo(ax,mc2y+22);bc.lineTo(ax-6,mc2y+12);bc.lineTo(ax+6,mc2y+12);bc.fill();
+  }
+
+  // Lobby / Lounge
+  const ly=290;
+  tileFloor(bc,0,ly,W,H-ly,'#c8b898','#bfaf90',T*2);
+
+  rect(bc,10,ly+10,200,H-ly-20,'rgba(0,0,0,.08)');
+  rect(bc,10,ly+10,200,2,'rgba(255,255,255,.1)');
+  drawDesk(bc,30,ly+30,120,30,'#b07840');
+  drawDesk(bc,30,ly+58,28,50,'#b07840');
+  rect(bc,34,ly+34,16,14,'#888');
+  rect(bc,35,ly+35,14,12,'#4af');
+  rect(bc,30,ly+12,120,14,'#8a5a28');
+  rect(bc,30,ly+12,120,2,'rgba(255,255,255,.2)');
+  bc.fillStyle='#ffd';bc.font='5px "Press Start 2P"';bc.textAlign='center';
+  bc.fillText('WELCOME / RECEPTION',90,ly+22);
+  drawChair(bc,52,ly+68,'#5a3a2a');
+  drawChair(bc,75,ly+68,'#5a3a2a');
+
+  drawTree(bc,220,H-60);
+  drawTree(bc,680,H-60);
+  drawTree(bc,450,H-40);
+
+  drawRug(bc,270,ly+20,360,H-ly-30,'#8a4a3a');
+  drawSofa(bc,280,ly+35,80,26,'#5a3a7a');
+  drawSofa(bc,490,ly+35,80,26,'#3a5a7a');
+  drawSofa(bc,280,ly+110,80,26,'#5a3a7a');
+  drawSofa(bc,490,ly+110,80,26,'#3a5a7a');
+  drawTable(bc,450,ly+85,24,'#a07038');
+  rect(bc,443,ly+76,8,5,'#c0392b');
+  rect(bc,455,ly+76,8,5,'#3498db');
+  rect(bc,446,ly+72,4,5,'#2a2a2a');
+  rect(bc,458,ly+72,4,5,'#2a2a2a');
+
+  tileFloor(bc,720,ly+5,170,H-ly-10,'#2a2a38','#242432',T);
+  rect(bc,720,ly+5,170,2,'rgba(255,255,255,.08)');
+  rect(bc,740,ly+20,120,60,'#1a6a1a');
+  rect(bc,740,ly+20,120,2,'#2a8a2a');
+  rect(bc,798,ly+20,4,60,'#fff');
+  rect(bc,740,ly+48,120,2,'rgba(255,255,255,.3)');
+  rect(bc,742,ly+28,8,14,'#c0392b');
+  rect(bc,842,ly+28,8,14,'#2980b9');
+  rect(bc,740,ly+100,80,50,'#7a4a1a');
+  rect(bc,742,ly+102,76,46,'#5a3a10');
+  for(let fi=0;fi<3;fi++){rect(bc,748+fi*20,ly+100,4,50,'#333');}
+  rect(bc,730,ly+2,10,16,'#3a3a50');
+  rect(bc,732,ly+4,6,10,'#4af');
+
+  bc.textAlign='left';
+}
+
+function drawNPCStatic(c,x,y,name,accentCol){
+  rect(c,x-5,y-18,10,8,'#f5b87a');
+  rect(c,x-5,y-18,10,2,'#2a1a08');
+  rect(c,x-5,y-10,10,8,accentCol);
+  rect(c,x-4,y-2,4,5,'#1a1a1a');
+  rect(c,x,y-2,4,5,'#1a1a1a');
+  drawNameplate(c,x,y-30,name);
+}
+
+drawBG();
+
+// ── PLAYER ────────────────────────────────────────────────────
+const playerEl=document.getElementById('player');
+const nametag=document.getElementById('nametag');
+let px=450,py=420;
+
+function syncPlayer(){
+  playerEl.style.left=(px-10)+'px';
+  playerEl.style.top =(py-24)+'px';
+  nametag.style.left =px+'px';
+  nametag.style.top  =(py-36)+'px';
+}
+syncPlayer();
+
+// ── INPUT ─────────────────────────────────────────────────────
+const keys={};
+addEventListener('keydown',e=>{keys[e.key]=true;if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight',' '].includes(e.key))e.preventDefault();});
+addEventListener('keyup',  e=>{keys[e.key]=false;});
+
+let clickTarget=null;
+const wrap=document.getElementById('wrap');
+wrap.addEventListener('mousemove',e=>{
+  const r=e.currentTarget.getBoundingClientRect();
+  const cx=(e.clientX-r.left)*(W/r.width);
+  const cy=(e.clientY-r.top)*(H/r.height);
+  document.getElementById('cursor').style.left=cx+'px';
+  document.getElementById('cursor').style.top =cy+'px';
+});
+wrap.addEventListener('click',e=>{
+  if(activeZone)return;
+  const r=e.currentTarget.getBoundingClientRect();
+  clickTarget={x:(e.clientX-r.left)*(W/r.width),y:(e.clientY-r.top)*(H/r.height)};
+});
+
+// ── DIALOG ────────────────────────────────────────────────────
+const dialogEl=document.getElementById('dialog');
+let activeZone=null;
+
+function openDialog(o){
+  if(activeZone===o)return;
+  activeZone=o;
+  clickTarget=null;
+
+  document.getElementById('d-name').textContent=o.label;
+  document.getElementById('d-name').style.color=o.nameColor;
+
+  const logoImg=document.getElementById('d-logo-img');
+  const logoFb=document.getElementById('d-logo-fb');
+  logoImg.style.display='block';
+  logoFb.style.display='none';
+  logoImg.src=o.logoSrc;
+
+  const termEl=document.getElementById('d-term');
+  termEl.innerHTML=o.term.split('\n').map(l=>{
+    const m=l.match(/^(> )(.+)/);
+    if(!m)return l;
+    return`<span class="g">&gt;</span> <span class="b">${m[2]}</span>`;
+  }).join('\n');
+
+  const btn=document.getElementById('d-btn');
+  btn.textContent=o.btnText;
+  btn.style.background=o.btnBg;
+  btn.style.color=o.btnFg;
+  btn.style.borderColor=o.btnBd;
+  btn.style.boxShadow=`4px 4px 0 ${o.btnSh}`;
+  btn.href=o.oauth;
+  btn.onclick=e=>{
+    e.preventDefault();
+    document.getElementById('cover').classList.add('on');
+    setTimeout(()=>{location.href=o.oauth;},380);
+  };
+
+  dialogEl.classList.add('open');
+  document.getElementById('keyhint').style.opacity='0';
+}
+function closeDialog(){
+  activeZone=null;
+  dialogEl.classList.remove('open');
+  document.getElementById('keyhint').style.opacity='1';
+}
+
+// ── OVERLAY ───────────────────────────────────────────────────
+function drawOverlay(t){
+  oc.clearRect(0,0,W,H);
+
+  OFFICES.forEach(o=>{
+    const dz=doorZone(o);
+    const dist=Math.hypot(px-(dz.x+dz.w/2),py-(dz.y+dz.h/2));
+    const cx=o.x+o.w/2;
+
+    const bob=Math.sin(t*.004)*4;
+    oc.fillStyle=activeZone===o?o.accent:dist<90?o.accent:o.wallLt;
+    oc.globalAlpha=activeZone===o?1:dist<90?0.9:0.5+0.2*Math.sin(t*.003);
+    oc.beginPath();
+    oc.moveTo(p(cx),p(o.y+o.h+8+bob));
+    oc.lineTo(p(cx-7),p(o.y+o.h-2+bob));
+    oc.lineTo(p(cx+7),p(o.y+o.h-2+bob));
+    oc.fill();
+    oc.globalAlpha=1;
+
+    if(dist<100){
+      const pulse=0.3+0.25*Math.sin(t*.007);
+      oc.strokeStyle=o.accent;oc.globalAlpha=pulse;oc.lineWidth=2;
+      oc.setLineDash([6,5]);
+      oc.strokeRect(p(o.x)+1.5,p(o.y)+1.5,o.w-3,o.h-3);
+      oc.setLineDash([]);oc.globalAlpha=1;
+
+      oc.fillStyle=o.accent;
+      oc.font='5px "Press Start 2P"';oc.textAlign='center';
+      oc.globalAlpha=0.8+0.2*Math.sin(t*.006);
+      oc.fillText('▶ ENTER',cx,o.y+o.h+22+bob);
+      oc.globalAlpha=1;
+    }
+  });
+
+  if(clickTarget&&!activeZone){
+    const r=6;const p2=t*.01;
+    oc.strokeStyle='rgba(255,255,255,.5)';oc.lineWidth=1.5;
+    oc.beginPath();oc.arc(p(clickTarget.x),p(clickTarget.y),r,p2,p2+Math.PI*1.5);oc.stroke();
+  }
+
+  oc.textAlign='left';
+}
+
+// ── MINIMAP ───────────────────────────────────────────────────
+function drawMinimap(){
+  const sx=90/W,sy=58/H;
+  mc.fillStyle='#080a14';mc.fillRect(0,0,90,58);
+  OFFICES.forEach(o=>{
+    mc.fillStyle=o.wall+'88';
+    mc.fillRect(p(o.x*sx),p(o.y*sy),p(o.w*sx),p(o.h*sy));
+  });
+  mc.fillStyle='rgba(200,180,150,.3)';mc.fillRect(0,p(290*sy),90,p((H-290)*sy));
+  mc.fillStyle='#7fff00';mc.fillRect(p(px*sx)-2,p(py*sy)-2,4,4);
+}
+
+// ── GAME LOOP ─────────────────────────────────────────────────
+const SPEED=2.6;
+
+function loop(t){
+  let dx=0,dy=0;
+  if(keys['ArrowLeft'] ||keys['a']||keys['A'])dx=-1;
+  if(keys['ArrowRight']||keys['d']||keys['D'])dx= 1;
+  if(keys['ArrowUp']   ||keys['w']||keys['W'])dy=-1;
+  if(keys['ArrowDown'] ||keys['s']||keys['S'])dy= 1;
+
+  const anyKey=dx||dy;
+  if(anyKey)clickTarget=null;
+
+  if(!anyKey&&clickTarget&&!activeZone){
+    const cdx=clickTarget.x-px,cdy=clickTarget.y-py;
+    const d=Math.hypot(cdx,cdy);
+    if(d<3)clickTarget=null;
+    else{dx=cdx/d;dy=cdy/d;}
+  }
+
+  if(dx||dy){
+    const len=Math.sqrt(dx*dx+dy*dy)||1;
+    const nx=dx/len,ny=dy/len;
+    const np={x:px+nx*SPEED,y:py+ny*SPEED};
+    np.x=Math.max(12,Math.min(W-12,np.x));
+    np.y=Math.max(50,Math.min(H-12,np.y));
+    px=np.x;py=np.y;
+    syncPlayer();
+    if(!playerEl.classList.contains('walking'))playerEl.classList.add('walking');
+    playerEl.querySelector('.sprite').style.transform=dx<0?'scaleX(-1)':'scaleX(1)';
+  } else {
+    playerEl.classList.remove('walking');
+  }
+
+  let inside=null;
+  OFFICES.forEach(o=>{const dz=doorZone(o);if(px>dz.x&&px<dz.x+dz.w&&py>dz.y&&py<dz.y+dz.h)inside=o;});
+  if(inside&&inside!==activeZone)openDialog(inside);
+  else if(!inside&&activeZone)closeDialog();
+
+  drawOverlay(t);
+  drawMinimap();
+  requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>
