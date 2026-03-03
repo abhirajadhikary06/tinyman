@@ -669,6 +669,7 @@ wrap.addEventListener('click',e=>{
 // ── VAULT ZONE ────────────────────────────────────────────────
 const VAULT_ZONE={x:VX-40,y:VY+80,w:200,h:100};
 let activeZone=false;
+let vaultPanelDismissed=false;
 
 function openPanel(){
   if(activeZone)return;
@@ -677,7 +678,10 @@ function openPanel(){
 }
 function closePanel2(){activeZone=false;document.getElementById('codepanel').classList.remove('open');}
 // make the HTML close button work
-document.querySelector('.cp-close').addEventListener('click',closePanel2);
+document.querySelector('.cp-close').addEventListener('click',()=>{
+  vaultPanelDismissed=true;
+  closePanel2();
+});
 
 // ── OVERLAY ──────────────────────────────────────────────────
 function drawOverlay(t){
@@ -777,8 +781,11 @@ function loop(t){
   // Zone check
   const vz=VAULT_ZONE;
   const inZone=px>vz.x&&px<vz.x+vz.w&&py>vz.y&&py<vz.y+vz.h;
-  if(inZone&&!activeZone)openPanel();
-  else if(!inZone&&activeZone&&!document.getElementById('codepanel').classList.contains('open'))closePanel2();
+  if(inZone&&!activeZone&&!vaultPanelDismissed)openPanel();
+  else if(!inZone){
+    vaultPanelDismissed=false;
+    if(activeZone&&!document.getElementById('codepanel').classList.contains('open'))closePanel2();
+  }
 
   drawOverlay(t);drawMinimap();
   requestAnimationFrame(loop);
