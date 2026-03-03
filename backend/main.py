@@ -11,6 +11,7 @@ from .config import PROXY_CLASS_CODE
 from .cache import cache
 from .tinyfish import scrape_url
 from .fireworks import generate_code
+from .usage import get_usage_payload, record_tinyfish_usage, record_fireworks_usage
 
 app = FastAPI(title="tinyman", version="1.0.0")
 
@@ -47,6 +48,14 @@ async def main_page():
 async def output_page():
     return FileResponse("frontend/output.html")
 
+@app.get("/usage")
+async def usage_page():
+    return FileResponse("frontend/usage.html")
+
+@app.get("/api/v1/usage")
+async def usage_dashboard_data(user=Depends(get_current_user)):
+    return get_usage_payload()
+
 @app.post("/api/v1/synthesize")
 async def synthesize(payload: SynthesizePayload, user=Depends(get_current_user)):
     url = payload.target_url.strip()
@@ -58,6 +67,7 @@ async def synthesize(payload: SynthesizePayload, user=Depends(get_current_user))
             return {"status": "success", "code": cached, "cached": True}
 
     # Non-API website mode only
+    record_tinyfish_usage()
     scraped = await scrape_url(
         url,
         "Analyze publicly accessible pages and flows to identify safe automation targets (forms, listing pages, pagination, filters) and data fields.",
@@ -92,6 +102,7 @@ Requirements:
 Output ONLY the full Python code.
 """
 
+    record_fireworks_usage()
     code = await generate_code(llm_prompt)
     cache.set(cache_key, code)
 

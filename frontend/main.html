@@ -157,6 +157,7 @@ canvas{position:absolute;top:0;left:0;image-rendering:pixelated;image-rendering:
       <span class="tb-dot"></span>
       <span id="tb-username">HACKER</span>
     </span>
+    <button class="tb-btn" onclick="goUsage()">USAGE</button>
     <button class="tb-btn" onclick="logout()">LOGOUT</button>
   </div>
 
@@ -220,6 +221,7 @@ try{
 }catch(e){}
 
 function logout(){localStorage.removeItem('jwt_token');location.href='/auth';}
+function goUsage(){document.getElementById('cover').classList.add('on');setTimeout(()=>{location.href='/usage';},280);}
 
 // ── CONSTANTS ────────────────────────────────────────────────
 const W=900,H=580,T=16;

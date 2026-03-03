@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>tinyman — Usage Room</title>
+	<link rel="icon" type="image/x-icon" href="/static/images/favicon.ico?v=1">
+	<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+	<style>
+		*{margin:0;padding:0;box-sizing:border-box;}
+		html,body{width:100%;height:100%;background:#0b101b;color:#d8f7ff;font-family:'Press Start 2P',monospace;overflow:hidden;}
+		.room{position:relative;width:100%;height:100%;background:radial-gradient(circle at 50% 10%,#152641 0%,#0b101b 45%,#070a12 100%);}
+		.topbar{position:absolute;top:0;left:0;right:0;height:34px;display:flex;align-items:center;gap:10px;padding:0 14px;background:rgba(7,10,16,.95);border-bottom:1px solid rgba(90,180,255,.25);z-index:10;}
+		.brand{font-size:8px;color:#28f0ff;}
+		.title{font-size:6px;color:rgba(255,255,255,.7);flex:1;text-align:center;}
+		.btn{font-family:'Press Start 2P',monospace;font-size:6px;padding:6px 10px;border:1px solid rgba(40,240,255,.5);background:transparent;color:#7ef8ff;cursor:pointer;}
+		.btn:hover{background:rgba(40,240,255,.08);}
+
+		.wall{position:absolute;inset:34px 0 120px;background:linear-gradient(180deg,#1a2f4d 0%,#111f35 40%,#0f1929 100%);border-bottom:2px solid rgba(0,0,0,.35);}
+		.screen-grid{position:absolute;top:18px;left:50%;transform:translateX(-50%);width:min(1240px,95vw);display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+		.screen{background:#090f1b;border:3px solid #233952;box-shadow:0 0 0 3px #0b1220,0 15px 40px rgba(0,0,0,.45);padding:12px 12px 10px;min-height:290px;position:relative;}
+		.screen-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+		.screen-name{font-size:8px;display:flex;align-items:center;gap:8px;}
+		.screen-stat{font-size:6px;color:rgba(255,255,255,.7);}
+		.logo{width:24px;height:24px;object-fit:contain;image-rendering:pixelated;}
+		.graph-wrap{height:220px;background:#050912;border:1px solid rgba(130,170,255,.25);padding:6px;position:relative;}
+		.graph{width:100%;height:100%;display:block;}
+		.legend{margin-top:8px;font-size:6px;color:rgba(255,255,255,.6);display:flex;justify-content:space-between;}
+
+		.table{position:absolute;left:50%;bottom:78px;transform:translateX(-50%);width:min(1050px,90vw);height:132px;background:linear-gradient(180deg,#5c3b1f 0%,#4b2e18 100%);border:3px solid #2d1a0f;box-shadow:0 12px 30px rgba(0,0,0,.45),inset 0 2px 0 rgba(255,220,180,.18);z-index:3;}
+		.table:before{content:'';position:absolute;left:18px;right:18px;top:16px;height:2px;background:rgba(255,255,255,.18);} 
+
+		.people-left,.people-right{position:absolute;bottom:24px;display:flex;gap:20px;z-index:4;}
+		.people-left{left:30px;}
+		.people-right{right:30px;}
+		.person{width:54px;height:72px;position:relative;}
+		.head{position:absolute;left:18px;top:0;width:18px;height:18px;background:#f4c089;border:2px solid #2a1a10;}
+		.body{position:absolute;left:10px;top:20px;width:34px;height:26px;background:#2a7cc8;border:2px solid #14395c;}
+		.leg{position:absolute;top:48px;width:12px;height:22px;background:#1b2b48;border:2px solid #0d1425;}
+		.leg.l1{left:12px;} .leg.l2{left:30px;}
+		.mic{position:absolute;left:26px;top:34px;width:2px;height:38px;background:#98b6d9;}
+		.mic:after{content:'';position:absolute;left:-3px;top:-8px;width:8px;height:8px;background:#d9e2f0;border-radius:50%;}
+
+		.floor{position:absolute;left:0;right:0;bottom:0;height:120px;background:linear-gradient(180deg,#15213a 0%,#101a2f 100%);} 
+		.floor:before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0,transparent 30px,rgba(255,255,255,.04) 30px,rgba(255,255,255,.04) 32px);} 
+
+		.icon-pop-row{position:absolute;left:50%;top:44px;transform:translateX(-50%);display:flex;gap:26px;z-index:9;}
+		.icon-pop{width:52px;height:52px;padding:6px;background:#0b1628;border:2px solid rgba(126,248,255,.6);box-shadow:0 0 18px rgba(126,248,255,.2);opacity:0;transform:scale(.2);}
+		.icon-pop img{width:100%;height:100%;object-fit:contain;image-rendering:pixelated;}
+		.icon-pop.show{animation:popIn .45s ease forwards;}
+		@keyframes popIn{0%{opacity:0;transform:scale(.2);}75%{opacity:1;transform:scale(1.1);}100%{opacity:1;transform:scale(1);}}
+	</style>
+</head>
+<body>
+	<div class="room">
+		<div class="topbar">
+			<div class="brand">tinyman</div>
+			<div class="title">USAGE CONFERENCE ROOM — TINYFISH + FIREWORKS</div>
+			<button class="btn" onclick="goMain()">BACK</button>
+			<button class="btn" onclick="logout()">LOGOUT</button>
+		</div>
+
+		<div class="icon-pop-row">
+			<div class="icon-pop" id="tiny-pop"><img src="/static/images/tinyfish.png" alt="TinyFish"></div>
+			<div class="icon-pop" id="fire-pop"><img src="/static/images/fireworks.png" alt="Fireworks"></div>
+		</div>
+
+		<div class="wall">
+			<div class="screen-grid">
+				<section class="screen">
+					<div class="screen-head">
+						<div class="screen-name" style="color:#FF6700;"><img class="logo" src="/static/images/tinyfish.png" alt="TinyFish">TINYFISH</div>
+						<div class="screen-stat" id="tiny-total">TODAY: 0</div>
+					</div>
+					<div class="graph-wrap"><canvas id="tiny-chart" class="graph" width="580" height="220"></canvas></div>
+					<div class="legend"><span>LAST 12 HOURS</span><span id="tiny-peak">PEAK: 0</span></div>
+				</section>
+
+				<section class="screen">
+					<div class="screen-head">
+						<div class="screen-name" style="color:#6720FF;"><img class="logo" src="/static/images/fireworks.png" alt="Fireworks">FIREWORKS</div>
+						<div class="screen-stat" id="fire-total">TODAY: 0</div>
+					</div>
+					<div class="graph-wrap"><canvas id="fire-chart" class="graph" width="580" height="220"></canvas></div>
+					<div class="legend"><span>LAST 12 HOURS</span><span id="fire-peak">PEAK: 0</span></div>
+				</section>
+			</div>
+		</div>
+
+		<div class="table"></div>
+		<div class="people-left">
+			<div class="person"><div class="head"></div><div class="body"></div><div class="leg l1"></div><div class="leg l2"></div><div class="mic"></div></div>
+			<div class="person"><div class="head"></div><div class="body" style="background:#8b3ec8;border-color:#432061;"></div><div class="leg l1"></div><div class="leg l2"></div><div class="mic"></div></div>
+			<div class="person"><div class="head"></div><div class="body" style="background:#228f6a;border-color:#145039;"></div><div class="leg l1"></div><div class="leg l2"></div><div class="mic"></div></div>
+		</div>
+		<div class="people-right">
+			<div class="person"><div class="head"></div><div class="body" style="background:#bb4f32;border-color:#5e2618;"></div><div class="leg l1"></div><div class="leg l2"></div><div class="mic"></div></div>
+			<div class="person"><div class="head"></div><div class="body" style="background:#5d66c9;border-color:#2b3060;"></div><div class="leg l1"></div><div class="leg l2"></div><div class="mic"></div></div>
+			<div class="person"><div class="head"></div><div class="body" style="background:#bb3f8a;border-color:#621f47;"></div><div class="leg l1"></div><div class="leg l2"></div><div class="mic"></div></div>
+		</div>
+
+		<div class="floor"></div>
+	</div>
+
+	<script>
+		const jwt = localStorage.getItem('jwt_token');
+		if (!jwt) { location.href = '/auth'; }
+
+		function logout(){ localStorage.removeItem('jwt_token'); location.href='/auth'; }
+		function goMain(){ location.href='/main'; }
+
+		function popBothIcons(){
+			document.getElementById('tiny-pop').classList.add('show');
+			document.getElementById('fire-pop').classList.add('show');
+		}
+
+		function drawLineChart(canvasId, labels, values, color){
+			const canvas = document.getElementById(canvasId);
+			const ctx = canvas.getContext('2d');
+			const w = canvas.width;
+			const h = canvas.height;
+			const padL = 36, padR = 10, padT = 12, padB = 26;
+			const chartW = w - padL - padR;
+			const chartH = h - padT - padB;
+
+			ctx.clearRect(0, 0, w, h);
+			ctx.fillStyle = '#050912';
+			ctx.fillRect(0, 0, w, h);
+
+			ctx.strokeStyle = 'rgba(160,190,255,.18)';
+			ctx.lineWidth = 1;
+			for(let i=0;i<=4;i++){
+				const y = padT + (chartH * i / 4);
+				ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(w - padR, y); ctx.stroke();
+			}
+
+			const maxValue = Math.max(1, ...values);
+			const stepX = values.length > 1 ? chartW / (values.length - 1) : chartW;
+
+			ctx.strokeStyle = color;
+			ctx.lineWidth = 3;
+			ctx.beginPath();
+			values.forEach((value, index) => {
+				const x = padL + index * stepX;
+				const y = padT + chartH - (value / maxValue) * chartH;
+				if(index === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+			});
+			ctx.stroke();
+
+			ctx.fillStyle = color;
+			values.forEach((value, index) => {
+				const x = padL + index * stepX;
+				const y = padT + chartH - (value / maxValue) * chartH;
+				ctx.beginPath(); ctx.arc(x, y, 3, 0, Math.PI * 2); ctx.fill();
+			});
+
+			ctx.fillStyle = 'rgba(220,235,255,.65)';
+			ctx.font = '10px monospace';
+			const xTicks = [0, Math.floor((labels.length - 1) / 2), labels.length - 1];
+			xTicks.forEach((tick) => {
+				if (!labels[tick]) return;
+				const x = padL + tick * stepX;
+				ctx.fillText(labels[tick], x - 16, h - 8);
+			});
+		}
+
+		async function loadUsage(){
+			const res = await fetch('/api/v1/usage', { headers: { 'Authorization': `Bearer ${jwt}` } });
+			if (!res.ok) {
+				if (res.status === 401) { logout(); return; }
+				throw new Error('Failed to load usage dashboard');
+			}
+			const data = await res.json();
+
+			const tiny = data.tinyfish;
+			const fire = data.fireworks;
+
+			document.getElementById('tiny-total').textContent = `TODAY: ${tiny.today_calls}`;
+			document.getElementById('fire-total').textContent = `TODAY: ${fire.today_calls}`;
+			document.getElementById('tiny-peak').textContent = `PEAK: ${tiny.series.peak}`;
+			document.getElementById('fire-peak').textContent = `PEAK: ${fire.series.peak}`;
+
+			drawLineChart('tiny-chart', tiny.series.labels, tiny.series.values, '#FF6700');
+			drawLineChart('fire-chart', fire.series.labels, fire.series.values, '#6720FF');
+		}
+
+		popBothIcons();
+		loadUsage().catch(() => {
+			drawLineChart('tiny-chart', ['--:--'], [0], '#FF6700');
+			drawLineChart('fire-chart', ['--:--'], [0], '#6720FF');
+		});
+	</script>
+</body>
+</html>
