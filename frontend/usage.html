@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>tinyman — Usage</title>
+<link rel="icon" type="image/x-icon" href="/static/images/favicon.ico?v=1">
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
@@ -589,8 +590,8 @@ function loop(t){
   if(keys['ArrowLeft']||keys['a']||keys['A'])dx=-1;if(keys['ArrowRight']||keys['d']||keys['D'])dx=1;
   if(keys['ArrowUp']||keys['w']||keys['W'])dy=-1;if(keys['ArrowDown']||keys['s']||keys['S'])dy=1;
   const anyKey=dx||dy;if(anyKey)clickTarget=null;
-  if(!anyKey&&clickTarget&&!activeZone){const cdx=clickTarget.x-px,cdy=clickTarget.y-py;const d=Math.hypot(cdx,cdy);if(d<3)clickTarget=null;else{dx=cdx/d;dy=cdy/d;}}
-  if((dx||dy)&&!activeZone){
+  if(!anyKey&&clickTarget){const cdx=clickTarget.x-px,cdy=clickTarget.y-py;const d=Math.hypot(cdx,cdy);if(d<3)clickTarget=null;else{dx=cdx/d;dy=cdy/d;}}
+  if(dx||dy){
     const len=Math.sqrt(dx*dx+dy*dy)||1;const np=clampPos(px+dx/len*SPEED,py+dy/len*SPEED);
     px=np.x;py=np.y;if(dx!==0)facingDir=dx<0?-1:1;walkFrame++;drawPlayer(walkFrame,facingDir);syncPlayer();
   }
