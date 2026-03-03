@@ -243,20 +243,21 @@ async function loadUsage(){
 }
 
 // ── LAYOUT ────────────────────────────────────────────────────
-// Two WIDE HORIZONTAL screens on the BOTTOM wall (far end of table)
-const SCR_GAP=12,SCR_H=80;
-const SCR_W=fl((W-SCR_GAP*3)/2); // ~438px each
-const LS={x:SCR_GAP,              y:H-SCR_H-14, w:SCR_W, h:SCR_H}; // TinyFish — left
-const RS={x:SCR_GAP*2+SCR_W,     y:H-SCR_H-14, w:SCR_W, h:SCR_H}; // Fireworks — right
+// Two WIDE HORIZONTAL screens SIDE-BY-SIDE on the TOP wall
+// Table sits below them — Kubuš (presenter) at the BOTTOM end of table
+const SCR_GAP=14, SCR_H=58;               // shorter height
+const SCR_W=fl((W-SCR_GAP*3)/2);          // ~429px wide each
+const LS={x:SCR_GAP,           y:TH+26, w:SCR_W, h:SCR_H}; // TinyFish  — left
+const RS={x:SCR_GAP*2+SCR_W,  y:TH+26, w:SCR_W, h:SCR_H}; // Fireworks — right
 
-// Walk zones just above each screen
-const TF_ZONE={x:LS.x,   y:H-SCR_H-130, w:LS.w, h:110};
-const FW_ZONE={x:RS.x,   y:H-SCR_H-130, w:RS.w, h:110};
+// Walk zones: gap between screens and table head
+const TF_ZONE={x:LS.x,  y:TH+26+SCR_H,   w:LS.w, h:70};
+const FW_ZONE={x:RS.x,  y:TH+26+SCR_H,   w:RS.w, h:70};
 
-// Shorter table — ends well above screens, leaving approach corridor
-const TABLE_X=368,TABLE_W=164,TABLE_Y=TH+44,TABLE_H=310;
-const NPC_Y_START=TH+86,NPC_Y_STEP=48;
-const L_NPC_X=304,R_NPC_X=596;
+// Table starts below screens, Kubuš sits at BOTTOM (foot) end
+const TABLE_X=368, TABLE_W=164, TABLE_Y=TH+26+SCR_H+60, TABLE_H=310;
+const NPC_Y_START=TABLE_Y+42, NPC_Y_STEP=48;
+const L_NPC_X=304, R_NPC_X=596;
 
 const L_NPCS=[{name:'Krzysiek',col:'#e74c3c'},{name:'Roman',col:'#3498db'},{name:'Mateusz',col:'#27ae60'},{name:'Tomek',col:'#f39c12'},{name:'Alan',col:'#9b59b6'},{name:'Adrian',col:'#1abc9c'}];
 const R_NPCS=[{name:'Maciek',col:'#e67e22'},{name:'Pati',col:'#e91e8c'},{name:'Szymon',col:'#00bcd4'},{name:'Rode',col:'#a855f7'},{name:'Manu',col:'#ff5722'},{name:'Mikol',col:'#8bc34a'}];
@@ -313,35 +314,46 @@ function drawBG(){
   for(let gy=TH;gy<H;gy+=T){bc.beginPath();bc.moveTo(0,fl(gy)+.5);bc.lineTo(W,fl(gy)+.5);bc.stroke();}
   for(let gx=0;gx<W;gx+=T){bc.beginPath();bc.moveTo(fl(gx)+.5,TH);bc.lineTo(fl(gx)+.5,H);bc.stroke();}
 
-  // Top wall + door
-  r(bc,0,TH,W,20,'#12101a');r(bc,0,TH,W,2,'rgba(255,255,255,.08)');
-  for(let lx=60;lx<W-60;lx+=120){r(bc,lx,TH,60,4,'rgba(255,255,255,.12)');bc.fillStyle='rgba(255,255,255,.04)';bc.fillRect(lx-10,TH+4,80,8);}
-  const dX=414,dW=72;
-  r(bc,dX,TH,dW,20,'#0e0c16');r(bc,dX-4,TH,4,20,'#12101a');r(bc,dX+dW,TH,4,20,'#12101a');
-  r(bc,dX,TH+18,dW,3,'rgba(255,255,255,.15)');
-  bc.fillStyle='rgba(255,255,255,.2)';bc.font='4px "Press Start 2P"';bc.textAlign='center';bc.fillText('< SDK LAB',dX+dW/2,TH+11);bc.textAlign='left';
+  // Top wall strip — screens are mounted here
+  r(bc,0,TH,W,24,'#12101a');
+  r(bc,0,TH,W,2,'rgba(255,255,255,.08)');
+  // ceiling light strips (avoid screen area)
+  r(bc,0,TH,SCR_GAP-2,4,'rgba(255,255,255,.1)');
+  r(bc,W-SCR_GAP+2,TH,SCR_GAP-2,4,'rgba(255,255,255,.1)');
 
-  // Bottom wall (where screens are mounted)
-  r(bc,0,H-14,W,14,'#12101a');r(bc,0,H-14,W,1,'rgba(255,255,255,.06)');
-  for(let lx=60;lx<W-60;lx+=120)r(bc,lx,H-4,60,4,'rgba(255,255,255,.08)');
+  // Bottom wall + door back to SDK lab
+  r(bc,0,H-22,W,22,'#12101a');r(bc,0,H-2,W,2,'rgba(255,255,255,.06)');
+  // bottom ceiling lights
+  for(let lx=60;lx<W-60;lx+=120)r(bc,lx,H-4,60,4,'rgba(255,255,255,.09)');
+  // door
+  const dX=414,dW=72;
+  r(bc,dX,H-22,dW,22,'#0e0c16');
+  r(bc,dX-4,H-22,4,22,'#12101a');r(bc,dX+dW,H-22,4,22,'#12101a');
+  r(bc,dX,H-22,dW,2,'rgba(255,255,255,.14)');
+  bc.fillStyle='rgba(255,255,255,.22)';bc.font='4px "Press Start 2P"';bc.textAlign='center';
+  bc.fillText('< SDK LAB',dX+dW/2,H-9);bc.textAlign='left';
 
   // Side walls
   r(bc,0,TH,18,H-TH,'#100e18');r(bc,16,TH,2,H-TH,'rgba(255,255,255,.04)');
   r(bc,882,TH,18,H-TH,'#100e18');r(bc,882,TH,2,H-TH,'rgba(255,255,255,.04)');
 
-  // ── HORIZONTAL SCREENS (bottom wall) ──
+  // ── TWO SCREENS — SIDE BY SIDE ON TOP WALL ──
   drawHScreen(bc,LS.x,LS.y,LS.w,LS.h,TF,'TINYFISH API USAGE');
   drawHScreen(bc,RS.x,RS.y,RS.w,RS.h,FW,'FIREWORKS AI USAGE');
-  // Cable trunkings
-  r(bc,2,LS.y+8,LS.x-2,3,'rgba(28,26,38,.9)');
-  r(bc,RS.x+RS.w,RS.y+8,W-RS.x-RS.w-16,3,'rgba(28,26,38,.9)');
-  // Cable between two screens
-  r(bc,LS.x+LS.w,LS.y+LS.h/2-1,SCR_GAP,3,'rgba(28,26,38,.7)');
+  // Shared wall rail running behind both screens
+  r(bc,SCR_GAP-4,TH+20,W-SCR_GAP*2+8,4,'#1a1828');
+  bc.strokeStyle='rgba(255,255,255,.04)';bc.lineWidth=1;
+  bc.strokeRect(fl(SCR_GAP-4)+.5,fl(TH+20)+.5,W-SCR_GAP*2+7,3);
+  // Cable runs down side walls
+  r(bc,2,LS.y+10,LS.x-2,3,'rgba(28,26,38,.8)');
+  r(bc,RS.x+RS.w+2,RS.y+10,W-RS.x-RS.w-16,3,'rgba(28,26,38,.8)');
+  // Bridge cable between the two screens in the gap
+  r(bc,LS.x+LS.w,LS.y+fl(LS.h/2)-1,SCR_GAP,3,'rgba(28,26,38,.65)');
 
   // ── TABLE ──
   drawTable(bc);
 
-  // ── SIDE NPCs ──
+  // ── SIDE NPCs (5 per side) ──
   L_NPCS.forEach((n,i)=>{
     const cy=NPC_Y_START+i*NPC_Y_STEP;
     chair(bc,L_NPC_X-18,cy,n.col+'44');
@@ -359,29 +371,25 @@ function drawBG(){
     r(bc,TABLE_X+TABLE_W-62,cy-1,8,8,n.col);r(bc,TABLE_X+TABLE_W-61,cy-1,6,2,shd(n.col,.3));
   });
 
-  // Head seat + presenter NPC (top, faces screens at bottom)
-  chair(bc,TABLE_X+TABLE_W/2-9,TH+24,'#2a2438');
-  npc(bc,TABLE_X+TABLE_W/2,TH+48,'Kubus','#ffd700',true);
-  mic(bc,TABLE_X+TABLE_W/2-4,TH+32);
+  // Kubuš — BOTTOM end of table (foot, facing the two screens above)
+  const kuY=TABLE_Y+TABLE_H+32;
+  chair(bc,TABLE_X+TABLE_W/2-9,kuY-10,'#3a3060');
+  npc(bc,TABLE_X+TABLE_W/2,kuY+14,'Kubus','#ffd700',true);
+  mic(bc,TABLE_X+TABLE_W/2-4,kuY+4);
 
-  // Foot chair near screens (player approaches from here)
-  chair(bc,TABLE_X+TABLE_W/2-9,TABLE_Y+TABLE_H+22,'#1e1c2c');
+  // Head end (top of table, nearest screens) — just an empty chair
+  chair(bc,TABLE_X+TABLE_W/2-9,TABLE_Y-22,'#1e1c2c');
 
   // Corner plants
-  plant(bc,20,TH+28);plant(bc,862,TH+28);
+  plant(bc,20,TH+100);plant(bc,862,TH+100);
   plant(bc,20,H-78);plant(bc,862,H-78);
 
-  // Zone floor markings
-  bc.strokeStyle='rgba(255,103,0,.09)';bc.lineWidth=1;bc.setLineDash([4,4]);
+  // Zone floor markings (subtle)
+  bc.strokeStyle='rgba(255,103,0,.08)';bc.lineWidth=1;bc.setLineDash([4,4]);
   bc.strokeRect(TF_ZONE.x+.5,fl(TF_ZONE.y)+.5,TF_ZONE.w-1,TF_ZONE.h-1);
-  bc.strokeStyle='rgba(103,32,255,.09)';
+  bc.strokeStyle='rgba(103,32,255,.08)';
   bc.strokeRect(FW_ZONE.x+.5,fl(FW_ZONE.y)+.5,FW_ZONE.w-1,FW_ZONE.h-1);
   bc.setLineDash([]);
-  bc.fillStyle='rgba(255,103,0,.11)';bc.font='4px "Press Start 2P"';bc.textAlign='center';
-  bc.fillText('TINYFISH ZONE',TF_ZONE.x+TF_ZONE.w/2,TF_ZONE.y-3);
-  bc.fillStyle='rgba(103,32,255,.14)';
-  bc.fillText('FIREWORKS ZONE',FW_ZONE.x+FW_ZONE.w/2,FW_ZONE.y-3);
-  bc.textAlign='left';
 }
 drawBG();
 
@@ -446,7 +454,7 @@ function drawPlayer(frame,dir){
   r(pc,4,21+lO,5,2,'#2a2848');r(pc,11,21+(2-lO),5,2,'#2a2848');
   r(pc,3,25,6,1,'#111');r(pc,11,25,6,1,'#111');if(dir<0)pc.restore();
 }
-let px=450,py=TH+36;drawPlayer(0,facingDir);
+let px=450,py=H-80;drawPlayer(0,facingDir);
 function syncPlayer(){playerEl.style.left=(px-10)+'px';playerEl.style.top=(py-26)+'px';nametag.style.left=px+'px';nametag.style.top=(py-42)+'px';}
 syncPlayer();
 
@@ -468,7 +476,9 @@ function closeFW(){activeZone=null;document.getElementById('fw-panel').classList
 
 // ── COLLISION ─────────────────────────────────────────────────
 function clampPos(nx,ny){
-  nx=Math.max(22,Math.min(W-22,nx));ny=Math.max(TH+16,Math.min(H-16,ny));
+  nx=Math.max(22,Math.min(W-22,nx));
+  // Allow walking all the way up near screens (TH+16 gives access to zone below screens)
+  ny=Math.max(TH+16,Math.min(H-28,ny));
   const bx=12,by=8;
   if(nx>TABLE_X-bx&&nx<TABLE_X+TABLE_W+bx&&ny>TABLE_Y+by&&ny<TABLE_Y+TABLE_H-by){
     const dL=nx-(TABLE_X-bx),dR=(TABLE_X+TABLE_W+bx)-nx,dT=ny-(TABLE_Y+by),dB=(TABLE_Y+TABLE_H-by)-ny;
@@ -493,19 +503,19 @@ function drawOverlay(t){
   oc.strokeStyle='rgba(255,103,0,'+(flk*.4)+')';oc.lineWidth=1;oc.strokeRect(LS.x+2,LS.y+2,LS.w-4,LS.h-4);
   oc.strokeStyle='rgba(103,32,255,'+(flk*.4)+')';oc.strokeRect(RS.x+2,RS.y+2,RS.w-4,RS.h-4);
 
-  // Screen glow cast upward onto floor/walls
-  const tga=0.05+0.03*Math.sin(t*.004);
-  const tg=oc.createLinearGradient(LS.x+LS.w/2,LS.y,LS.x+LS.w/2,LS.y-120);
+  // Screen glow cast downward onto floor
+  const tga=0.07+0.04*Math.sin(t*.004);
+  const tg=oc.createLinearGradient(0,LS.y+LS.h,0,LS.y+LS.h+100);
   tg.addColorStop(0,'rgba(255,103,0,'+tga+')');tg.addColorStop(1,'transparent');
-  oc.fillStyle=tg;oc.fillRect(LS.x-10,LS.y-120,LS.w+20,125);
-  const fga=0.07+0.04*Math.sin(t*.004);
-  const fg=oc.createLinearGradient(RS.x+RS.w/2,RS.y,RS.x+RS.w/2,RS.y-120);
+  oc.fillStyle=tg;oc.fillRect(LS.x-10,LS.y+LS.h,LS.w+20,100);
+  const fga=0.09+0.05*Math.sin(t*.004);
+  const fg=oc.createLinearGradient(0,RS.y+RS.h,0,RS.y+RS.h+100);
   fg.addColorStop(0,'rgba(103,32,255,'+fga+')');fg.addColorStop(1,'transparent');
-  oc.fillStyle=fg;oc.fillRect(RS.x-10,RS.y-120,RS.w+20,125);
+  oc.fillStyle=fg;oc.fillRect(RS.x-10,RS.y+RS.h,RS.w+20,100);
 
-  // Proximity prompts
-  const tfNear=Math.hypot(px-(LS.x+LS.w/2),py-(TF_ZONE.y+TF_ZONE.h/2))<220;
-  const fwNear=Math.hypot(px-(RS.x+RS.w/2),py-(FW_ZONE.y+FW_ZONE.h/2))<220;
+  // Proximity prompts — arrow points UP toward screens (screens are at top)
+  const tfNear=Math.hypot(px-(LS.x+LS.w/2),py-(TF_ZONE.y+TF_ZONE.h/2))<200;
+  const fwNear=Math.hypot(px-(RS.x+RS.w/2),py-(FW_ZONE.y+FW_ZONE.h/2))<200;
 
   if(tfNear&&activeZone!=='tinyfish'){
     const p=0.3+0.25*Math.sin(t*.007);
@@ -513,9 +523,14 @@ function drawOverlay(t){
     oc.setLineDash([5,4]);oc.strokeRect(LS.x+2,LS.y+2,LS.w-4,LS.h-4);oc.setLineDash([]);oc.globalAlpha=1;
     const bob=Math.sin(t*.005)*4;
     oc.fillStyle='#FF6700';oc.globalAlpha=.88;
-    oc.beginPath();oc.moveTo(LS.x+LS.w/2,LS.y-6+bob);oc.lineTo(LS.x+LS.w/2-9,LS.y-16+bob);oc.lineTo(LS.x+LS.w/2+9,LS.y-16+bob);oc.fill();
+    // upward pointing arrow below the screen
+    oc.beginPath();
+    oc.moveTo(LS.x+LS.w/2,     LS.y+LS.h+10+bob);
+    oc.lineTo(LS.x+LS.w/2-9,   LS.y+LS.h+20+bob);
+    oc.lineTo(LS.x+LS.w/2+9,   LS.y+LS.h+20+bob);
+    oc.fill();
     oc.font='5px "Press Start 2P"';oc.textAlign='center';
-    oc.fillText('VIEW TINYFISH STATS',LS.x+LS.w/2,LS.y-20+bob);
+    oc.fillText('VIEW TINYFISH STATS',LS.x+LS.w/2,LS.y+LS.h+28+bob);
     oc.globalAlpha=1;oc.textAlign='left';
   }
   if(fwNear&&activeZone!=='fireworks'){
@@ -524,9 +539,13 @@ function drawOverlay(t){
     oc.setLineDash([5,4]);oc.strokeRect(RS.x+2,RS.y+2,RS.w-4,RS.h-4);oc.setLineDash([]);oc.globalAlpha=1;
     const bob=Math.sin(t*.005)*4;
     oc.fillStyle='#a060ff';oc.globalAlpha=.88;
-    oc.beginPath();oc.moveTo(RS.x+RS.w/2,RS.y-6+bob);oc.lineTo(RS.x+RS.w/2-9,RS.y-16+bob);oc.lineTo(RS.x+RS.w/2+9,RS.y-16+bob);oc.fill();
+    oc.beginPath();
+    oc.moveTo(RS.x+RS.w/2,     RS.y+RS.h+10+bob);
+    oc.lineTo(RS.x+RS.w/2-9,   RS.y+RS.h+20+bob);
+    oc.lineTo(RS.x+RS.w/2+9,   RS.y+RS.h+20+bob);
+    oc.fill();
     oc.font='5px "Press Start 2P"';oc.textAlign='center';
-    oc.fillText('VIEW FIREWORKS STATS',RS.x+RS.w/2,RS.y-20+bob);
+    oc.fillText('VIEW FIREWORKS STATS',RS.x+RS.w/2,RS.y+RS.h+28+bob);
     oc.globalAlpha=1;oc.textAlign='left';
   }
 
