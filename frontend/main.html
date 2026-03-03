@@ -274,7 +274,7 @@ canvas{position:absolute;top:0;left:0;image-rendering:pixelated;image-rendering:
 <script>
 // ── AUTH CHECK ────────────────────────────────────────────────
 const jwt = localStorage.getItem('jwt_token');
-if(!jwt){ document.getElementById('cover').classList.add('on'); setTimeout(()=>{location.href='auth.html';},300); }
+if(!jwt){ document.getElementById('cover').classList.add('on'); setTimeout(()=>{location.href='/auth';},300); }
 
 // Show user name from JWT payload if possible
 try{
@@ -284,7 +284,7 @@ try{
   document.getElementById('nametag').textContent=name;
 }catch(e){}
 
-function logout(){localStorage.removeItem('jwt_token');location.href='auth.html';}
+function logout(){localStorage.removeItem('jwt_token');location.href='/auth';}
 
 // ── CONSTANTS ────────────────────────────────────────────────
 const W=900,H=580,T=16;
@@ -858,7 +858,7 @@ async function runSynth(){
     localStorage.setItem('generatedUrl',url);
     bar.style.width='100%';pct.textContent='100%';
     const dl=document.createElement('span');dl.className='pg-line';dl.textContent='> DONE. REDIRECTING...';log.appendChild(dl);
-    setTimeout(()=>{document.getElementById('cover').classList.add('on');setTimeout(()=>{location.href='output.html';},400);},700);
+    setTimeout(()=>{document.getElementById('cover').classList.add('on');setTimeout(()=>{location.href='/output';},400);},700);
   }catch(err){
     clearInterval(tick);
     bar.style.width='100%';bar.style.background='#f87171';pct.textContent='ERR';
