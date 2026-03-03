@@ -19,16 +19,13 @@ html,body{
   overflow:hidden;cursor:none;
 }
 canvas{position:absolute;top:0;left:0;image-rendering:pixelated;image-rendering:crisp-edges;}
-#bg{z-index:1;}
-#ov{z-index:10;pointer-events:none;}
+#bg{z-index:1;}#ov{z-index:10;pointer-events:none;}
 
-/* ── CURSOR ── */
 #cursor{position:absolute;z-index:100;pointer-events:none;width:16px;height:16px;margin:-8px 0 0 -8px;}
 .cur-h{position:absolute;top:50%;left:0;width:100%;height:1.5px;background:rgba(255,255,255,.5);transform:translateY(-50%);}
 .cur-v{position:absolute;left:50%;top:0;width:1.5px;height:100%;background:rgba(255,255,255,.5);transform:translateX(-50%);}
 .cur-c{position:absolute;top:50%;left:50%;width:4px;height:4px;background:#fff;transform:translate(-50%,-50%);}
 
-/* ── PLAYER ── */
 #player{position:absolute;z-index:30;pointer-events:none;width:20px;height:26px;}
 #nametag{
   position:absolute;z-index:31;pointer-events:none;
@@ -36,13 +33,10 @@ canvas{position:absolute;top:0;left:0;image-rendering:pixelated;image-rendering:
   border:1.5px solid rgba(255,255,255,.2);color:rgba(255,255,255,.7);
   font-size:5px;padding:2px 5px;transform:translateX(-50%);
 }
-
-/* ── TOP HUD BAR ── */
 #topbar{
   position:absolute;top:0;left:0;right:0;height:28px;z-index:50;
   background:rgba(8,6,12,.97);border-bottom:1px solid rgba(255,255,255,.08);
-  display:flex;align-items:center;padding:0 14px;gap:14px;
-  pointer-events:auto;
+  display:flex;align-items:center;padding:0 14px;gap:14px;pointer-events:auto;
 }
 .tb-logo{font-size:8px;color:#fff;text-shadow:0 0 14px rgba(255,255,255,.2);}
 .tb-sep{font-size:8px;color:rgba(255,255,255,.12);}
@@ -50,45 +44,30 @@ canvas{position:absolute;top:0;left:0;image-rendering:pixelated;image-rendering:
 .tb-user{font-size:5px;color:rgba(255,255,255,.35);display:flex;align-items:center;gap:5px;}
 .tb-dot{width:5px;height:5px;background:#a0ff80;border-radius:50%;display:inline-block;animation:dotpulse 2s ease infinite;}
 @keyframes dotpulse{0%,100%{box-shadow:0 0 4px #a0ff80;}50%{box-shadow:0 0 10px #a0ff80,0 0 20px rgba(160,255,128,.3);}}
-.tb-btn{
-  font-family:'Press Start 2P',monospace;font-size:5px;
-  padding:4px 8px;border:1px solid rgba(255,255,255,.15);
-  color:rgba(255,255,255,.4);background:transparent;cursor:pointer;
-}
+.tb-btn{font-family:'Press Start 2P',monospace;font-size:5px;padding:4px 8px;border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.4);background:transparent;cursor:pointer;}
 .tb-btn:hover{border-color:rgba(255,255,255,.4);color:rgba(255,255,255,.7);}
 .tb-btn.back{border-color:rgba(103,32,255,.4);color:rgba(150,80,255,.7);}
 .tb-btn.back:hover{border-color:rgba(103,32,255,.8);color:#a060ff;}
 
-/* ── STAT PANELS (slide up from bottom) ── */
 .stat-panel{
   position:absolute;bottom:0;left:0;right:0;z-index:60;
-  transform:translateY(100%);
-  transition:transform .22s cubic-bezier(.17,.67,.35,1.15);
-  padding:12px 24px 14px;
-  display:flex;gap:20px;align-items:flex-start;
+  transform:translateY(100%);transition:transform .2s cubic-bezier(.17,.67,.35,1.15);
+  padding:11px 20px 13px;display:flex;gap:16px;align-items:flex-start;
 }
 .stat-panel.open{transform:translateY(0);}
-#tf-panel{
-  background:#0e0800;
-  border-top:2px solid #FF6700;
-  box-shadow:0 -4px 0 rgba(255,103,0,.2),0 -30px 60px rgba(255,103,0,.07);
-}
-#fw-panel{
-  background:#08060e;
-  border-top:2px solid #6720FF;
-  box-shadow:0 -4px 0 rgba(103,32,255,.2),0 -30px 60px rgba(103,32,255,.07);
-}
+#tf-panel{background:#0e0700;border-top:2px solid #FF6700;box-shadow:0 -3px 0 rgba(255,103,0,.25),0 -24px 50px rgba(255,103,0,.08);}
+#fw-panel{background:#08040e;border-top:2px solid #6720FF;box-shadow:0 -3px 0 rgba(103,32,255,.25),0 -24px 50px rgba(103,32,255,.08);}
 
-.sp-brand{flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:5px;width:56px;}
-.sp-icon{width:44px;height:44px;border:1px solid;display:flex;align-items:center;justify-content:center;overflow:hidden;}
-.sp-icon img{width:36px;height:36px;object-fit:contain;image-rendering:pixelated;}
-.sp-icon-name{font-size:5px;}
+.sp-brand{flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:4px;width:52px;}
+.sp-icon{width:40px;height:40px;border:1px solid;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.sp-icon img{width:32px;height:32px;object-fit:contain;image-rendering:pixelated;}
+.sp-icon-name{font-size:4.5px;}
 #tf-panel .sp-icon{border-color:rgba(255,103,0,.4);background:rgba(255,103,0,.06);}
 #tf-panel .sp-icon-name{color:#FF6700;}
 #fw-panel .sp-icon{border-color:rgba(103,32,255,.4);background:rgba(103,32,255,.06);}
 #fw-panel .sp-icon-name{color:#a060ff;}
 
-.sp-stats{flex:1;display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px 16px;}
+.sp-stats{flex:1;display:grid;grid-template-columns:repeat(3,1fr);gap:6px 14px;}
 .sp-stat{display:flex;flex-direction:column;gap:3px;}
 .sp-label{font-size:4px;color:rgba(255,255,255,.3);letter-spacing:1px;}
 .sp-value{font-size:9px;}
@@ -96,26 +75,19 @@ canvas{position:absolute;top:0;left:0;image-rendering:pixelated;image-rendering:
 #tf-panel .sp-value{color:#FF6700;}
 #fw-panel .sp-value{color:#a060ff;}
 
-.sp-term{
-  flex-shrink:0;width:200px;
-  background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.06);
-  padding:7px 9px;font-size:4.5px;line-height:2.1;
-  color:rgba(255,255,255,.35);
-}
+.sp-term{flex-shrink:0;width:190px;background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.06);padding:6px 8px;font-size:4.5px;line-height:2.1;color:rgba(255,255,255,.35);}
 .sp-term .hi{color:rgba(255,255,255,.7);}
 #tf-panel .sp-term .acc{color:#FF6700;}
 #fw-panel .sp-term .acc{color:#a060ff;}
-.sp-esc{font-size:4px;color:rgba(255,255,255,.15);align-self:flex-end;margin-top:2px;}
+.sp-esc{font-size:4px;color:rgba(255,255,255,.15);align-self:flex-end;}
 
-/* ── MINIMAP ── */
+#loading-badge{position:absolute;top:36px;left:50%;transform:translateX(-50%);z-index:55;background:rgba(10,8,14,.95);border:1px solid rgba(255,255,255,.15);padding:6px 14px;font-size:5px;color:rgba(255,255,255,.4);display:none;}
+#loading-badge.show{display:block;}
+
 #mmap-wrap{position:absolute;bottom:10px;right:12px;z-index:50;border:1px solid rgba(255,255,255,.1);background:rgba(6,4,10,.9);padding:2px;pointer-events:none;}
 #mmap{display:block;image-rendering:pixelated;}
-
-/* ── TRANSITION ── */
 #cover{position:fixed;inset:0;background:#000;opacity:0;pointer-events:none;transition:opacity .4s;z-index:999;}
 #cover.on{opacity:1;}
-
-/* ── CRT ── */
 #scanlines{position:absolute;inset:0;z-index:5;pointer-events:none;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.03) 2px,rgba(0,0,0,.03) 4px);}
 </style>
 </head>
@@ -124,71 +96,62 @@ canvas{position:absolute;top:0;left:0;image-rendering:pixelated;image-rendering:
   <div id="scanlines"></div>
   <canvas id="bg" width="900" height="580"></canvas>
   <canvas id="ov" width="900" height="580"></canvas>
-
-  <!-- TOP HUD -->
   <div id="topbar">
     <span class="tb-logo">tinyman</span>
     <span class="tb-sep">/</span>
-    <span class="tb-room">▶ ANALYTICS SUITE — FLOOR 4</span>
+    <span class="tb-room">&#9658; ANALYTICS SUITE &mdash; FLOOR 4</span>
     <span class="tb-user"><span class="tb-dot"></span><span id="tb-user">HACKER</span></span>
-    <button class="tb-btn back" onclick="goBack()">◀ SDK LAB</button>
+    <button class="tb-btn back" onclick="goBack()">&#9668; SDK LAB</button>
     <button class="tb-btn" onclick="logout()">LOGOUT</button>
   </div>
-
-  <!-- Minimap -->
+  <div id="loading-badge">&#10171; FETCHING USAGE DATA...</div>
   <div id="mmap-wrap"><canvas id="mmap" width="90" height="58"></canvas></div>
-
-  <!-- Cursor -->
   <div id="cursor"><div class="cur-h"></div><div class="cur-v"></div><div class="cur-c"></div></div>
-
-  <!-- Player -->
   <div id="player"></div>
   <div id="nametag">YOU</div>
 
-  <!-- TinyFish stat panel -->
   <div id="tf-panel" class="stat-panel">
     <div class="sp-brand">
       <div class="sp-icon"><img src="/static/images/tinyfish.png" alt="tf" onerror="this.style.opacity='.2'"></div>
       <div class="sp-icon-name">TINYFISH</div>
     </div>
     <div class="sp-stats">
-      <div class="sp-stat"><div class="sp-label">API CALLS TODAY</div><div class="sp-value" id="tf-calls">8,412</div><div class="sp-delta">▲ 12.4%</div></div>
-      <div class="sp-stat"><div class="sp-label">AVG LATENCY</div><div class="sp-value" id="tf-lat">142ms</div><div class="sp-delta">▼ 3.1%</div></div>
-      <div class="sp-stat"><div class="sp-label">TOKENS USED</div><div class="sp-value" id="tf-tok">2.1M</div><div class="sp-delta">▲ 8.7%</div></div>
-      <div class="sp-stat"><div class="sp-label">ACTIVE KEYS</div><div class="sp-value" id="tf-keys">34</div><div class="sp-delta">▲ 2</div></div>
-      <div class="sp-stat"><div class="sp-label">SUCCESS RATE</div><div class="sp-value" id="tf-ok">99.2%</div><div class="sp-delta" style="color:#FF6700">● HEALTHY</div></div>
-      <div class="sp-stat"><div class="sp-label">COST (USD)</div><div class="sp-value" id="tf-cost">$18.40</div><div class="sp-delta">▲ $1.20</div></div>
+      <div class="sp-stat"><div class="sp-label">API CALLS TODAY</div><div class="sp-value" id="tf-calls">&#8212;</div><div class="sp-delta" id="tf-calls-d">LOADING</div></div>
+      <div class="sp-stat"><div class="sp-label">AVG LATENCY</div><div class="sp-value" id="tf-lat">&#8212;</div><div class="sp-delta" id="tf-lat-d">LOADING</div></div>
+      <div class="sp-stat"><div class="sp-label">TOKENS USED</div><div class="sp-value" id="tf-tok">&#8212;</div><div class="sp-delta" id="tf-tok-d">LOADING</div></div>
+      <div class="sp-stat"><div class="sp-label">SUCCESS RATE</div><div class="sp-value" id="tf-ok">&#8212;</div><div class="sp-delta" id="tf-ok-d" style="color:#FF6700">LOADING</div></div>
+      <div class="sp-stat"><div class="sp-label">ACTIVE KEYS</div><div class="sp-value" id="tf-keys">&#8212;</div><div class="sp-delta" id="tf-keys-d">LOADING</div></div>
+      <div class="sp-stat"><div class="sp-label">COST (USD)</div><div class="sp-value" id="tf-cost">&#8212;</div><div class="sp-delta" id="tf-cost-d">LOADING</div></div>
     </div>
-    <div class="sp-term">
-      <span class="acc">&gt;</span> <span class="hi">TINYFISH API</span> v3.1<br>
+    <div class="sp-term" id="tf-term">
+      <span class="acc">&gt;</span> <span class="hi">TINYFISH API</span><br>
       <span class="acc">&gt;</span> HOST: api.tinyfish.io<br>
-      <span class="acc">&gt;</span> PLAN: PRO TIER<br>
-      <span class="acc">&gt;</span> QUOTA: 8,412 / 50,000<br>
-      <span class="acc">&gt;</span> RESET IN: 14h 22m
+      <span class="acc">&gt;</span> STATUS: FETCHING...<br>
+      <span class="acc">&gt;</span> QUOTA: &#8212;<br>
+      <span class="acc">&gt;</span> RESET IN: &#8212;
     </div>
     <span class="sp-esc">WALK AWAY TO CLOSE</span>
   </div>
 
-  <!-- Fireworks stat panel -->
   <div id="fw-panel" class="stat-panel">
     <div class="sp-brand">
       <div class="sp-icon"><img src="/static/images/fireworks.png" alt="fw" onerror="this.style.opacity='.2'"></div>
       <div class="sp-icon-name">FIREWORKS</div>
     </div>
     <div class="sp-stats">
-      <div class="sp-stat"><div class="sp-label">EVENTS FIRED</div><div class="sp-value" id="fw-evts">24,891</div><div class="sp-delta">▲ 31.2%</div></div>
-      <div class="sp-stat"><div class="sp-label">WEBHOOKS</div><div class="sp-value" id="fw-wh">1,204</div><div class="sp-delta">▲ 5.8%</div></div>
-      <div class="sp-stat"><div class="sp-label">PIPELINES</div><div class="sp-value" id="fw-pip">7</div><div class="sp-delta">● ACTIVE</div></div>
-      <div class="sp-stat"><div class="sp-label">P95 LATENCY</div><div class="sp-value" id="fw-lat">88ms</div><div class="sp-delta">▼ 6.2%</div></div>
-      <div class="sp-stat"><div class="sp-label">ERROR RATE</div><div class="sp-value" id="fw-err">0.3%</div><div class="sp-delta" style="color:#6720FF">● NOMINAL</div></div>
-      <div class="sp-stat"><div class="sp-label">COST (USD)</div><div class="sp-value" id="fw-cost">$9.12</div><div class="sp-delta">▲ $0.44</div></div>
+      <div class="sp-stat"><div class="sp-label">EVENTS FIRED</div><div class="sp-value" id="fw-evts">&#8212;</div><div class="sp-delta" id="fw-evts-d">LOADING</div></div>
+      <div class="sp-stat"><div class="sp-label">WEBHOOKS</div><div class="sp-value" id="fw-wh">&#8212;</div><div class="sp-delta" id="fw-wh-d">LOADING</div></div>
+      <div class="sp-stat"><div class="sp-label">P95 LATENCY</div><div class="sp-value" id="fw-lat">&#8212;</div><div class="sp-delta" id="fw-lat-d">LOADING</div></div>
+      <div class="sp-stat"><div class="sp-label">ERROR RATE</div><div class="sp-value" id="fw-err">&#8212;</div><div class="sp-delta" id="fw-err-d" style="color:#6720FF">LOADING</div></div>
+      <div class="sp-stat"><div class="sp-label">PIPELINES</div><div class="sp-value" id="fw-pip">&#8212;</div><div class="sp-delta" id="fw-pip-d">LOADING</div></div>
+      <div class="sp-stat"><div class="sp-label">COST (USD)</div><div class="sp-value" id="fw-cost">&#8212;</div><div class="sp-delta" id="fw-cost-d">LOADING</div></div>
     </div>
-    <div class="sp-term">
-      <span class="acc">&gt;</span> <span class="hi">FIREWORKS AI</span> v2.8<br>
+    <div class="sp-term" id="fw-term">
+      <span class="acc">&gt;</span> <span class="hi">FIREWORKS AI</span><br>
       <span class="acc">&gt;</span> HOST: api.fireworks.ai<br>
-      <span class="acc">&gt;</span> PLAN: SCALE TIER<br>
-      <span class="acc">&gt;</span> EVENTS: 24,891 / 100k<br>
-      <span class="acc">&gt;</span> BILLING CYCLE: 8d LEFT
+      <span class="acc">&gt;</span> STATUS: FETCHING...<br>
+      <span class="acc">&gt;</span> EVENTS: &#8212;<br>
+      <span class="acc">&gt;</span> BILLING CYCLE: &#8212;
     </div>
     <span class="sp-esc">WALK AWAY TO CLOSE</span>
   </div>
@@ -196,511 +159,394 @@ canvas{position:absolute;top:0;left:0;image-rendering:pixelated;image-rendering:
 <div id="cover"></div>
 
 <script>
-// ── AUTH ──────────────────────────────────────────────────────
 const jwt=localStorage.getItem('jwt_token');
 if(!jwt){document.getElementById('cover').classList.add('on');setTimeout(()=>{location.href='/auth';},300);}
-try{
-  const p=JSON.parse(atob(jwt.split('.')[1]));
-  const n=(p.name||p.login||p.email||'HACKER').toUpperCase().slice(0,10);
-  document.getElementById('tb-user').textContent=n;
-  document.getElementById('nametag').textContent=n;
-}catch(e){}
-
+try{const p=JSON.parse(atob(jwt.split('.')[1]));const n=(p.name||p.login||p.email||'HACKER').toUpperCase().slice(0,10);document.getElementById('tb-user').textContent=n;document.getElementById('nametag').textContent=n;}catch(e){}
 function logout(){localStorage.removeItem('jwt_token');go('/auth');}
 function goBack(){go('/main');}
 function go(u){document.getElementById('cover').classList.add('on');setTimeout(()=>{location.href=u;},380);}
 
-// ── CONSTANTS ─────────────────────────────────────────────────
-const W=900,H=580,T=16,TH=28;
-const fl=Math.floor;
+const W=900,H=580,T=16,TH=28,fl=Math.floor;
+const TF='#FF6700',FW='#6720FF';
 
-// ── BRAND COLORS ──────────────────────────────────────────────
-const TF='#FF6700';  // TinyFish orange
-const FW='#6720FF';  // Fireworks purple
-
-// ── CANVAS ────────────────────────────────────────────────────
 const bg=document.getElementById('bg');const bc=bg.getContext('2d');bc.imageSmoothingEnabled=false;
 const ov=document.getElementById('ov');const oc=ov.getContext('2d');oc.imageSmoothingEnabled=false;
 const mm=document.getElementById('mmap');const mc=mm.getContext('2d');mc.imageSmoothingEnabled=false;
 
-// ── DRAW UTILS ────────────────────────────────────────────────
 function r(c,x,y,w,h,col){c.fillStyle=col;c.fillRect(fl(x),fl(y),w,h);}
-function shd(col,amt){
-  let c2=col.replace('#','');if(c2.length===3)c2=c2[0]+c2[0]+c2[1]+c2[1]+c2[2]+c2[2];
-  let rr=parseInt(c2.slice(0,2),16),gg=parseInt(c2.slice(2,4),16),bb=parseInt(c2.slice(4,6),16);
-  return`rgb(${Math.max(0,Math.min(255,fl(rr+255*amt)))},${Math.max(0,Math.min(255,fl(gg+255*amt)))},${Math.max(0,Math.min(255,fl(bb+255*amt)))})`;
+function shd(col,amt){let c2=col.replace('#','');if(c2.length===3)c2=c2[0]+c2[0]+c2[1]+c2[1]+c2[2]+c2[2];let rr=parseInt(c2.slice(0,2),16),gg=parseInt(c2.slice(2,4),16),bb=parseInt(c2.slice(4,6),16);return`rgb(${Math.max(0,Math.min(255,fl(rr+255*amt)))},${Math.max(0,Math.min(255,fl(gg+255*amt)))},${Math.max(0,Math.min(255,fl(bb+255*amt)))})`;}
+
+// ── DATA ──────────────────────────────────────────────────────
+let TF_DATA=null,FW_DATA=null;
+function seedData(seed,len,base,amp){const pts=[];let v=base,rng=seed;const rand=()=>{rng=(rng*1664525+1013904223)&0xffffffff;return(rng>>>0)/0xffffffff;};for(let i=0;i<len;i++){v=Math.max(base*.05,Math.min(base*2.2,v+(rand()-.43)*amp));pts.push(Math.round(v));}return pts;}
+function fmtNum(n){if(n==null)return'--';if(n>=1e6)return(n/1e6).toFixed(1)+'M';if(n>=1e3)return(n/1e3).toFixed(1)+'K';return String(n);}
+
+function populateTF(d){
+  document.getElementById('tf-calls').textContent=fmtNum(d.today_calls);
+  document.getElementById('tf-calls-d').textContent=d.calls_delta||'';
+  document.getElementById('tf-lat').textContent=d.avg_latency_ms!=null?d.avg_latency_ms+'ms':'--';
+  document.getElementById('tf-lat-d').textContent=d.latency_delta||'';
+  document.getElementById('tf-tok').textContent=fmtNum(d.tokens_used);
+  document.getElementById('tf-tok-d').textContent=d.tokens_delta||'';
+  document.getElementById('tf-ok').textContent=d.success_rate!=null?d.success_rate+'%':'--';
+  document.getElementById('tf-ok-d').textContent='&#9679; HEALTHY';
+  document.getElementById('tf-keys').textContent=d.active_keys!=null?String(d.active_keys):'--';
+  document.getElementById('tf-keys-d').textContent=d.keys_delta||'';
+  document.getElementById('tf-cost').textContent=d.cost_usd!=null?'$'+Number(d.cost_usd).toFixed(2):'--';
+  document.getElementById('tf-cost-d').textContent=d.cost_delta||'';
+  document.getElementById('tf-term').innerHTML=
+    '<span class="acc">&gt;</span> <span class="hi">TINYFISH API</span><br>'+
+    '<span class="acc">&gt;</span> HOST: api.tinyfish.io<br>'+
+    '<span class="acc">&gt;</span> PLAN: '+(d.plan||'--')+'<br>'+
+    '<span class="acc">&gt;</span> QUOTA: '+fmtNum(d.today_calls)+' / '+fmtNum(d.quota_limit)+'<br>'+
+    '<span class="acc">&gt;</span> RESET IN: '+(d.quota_reset||'--');
+}
+function populateFW(d){
+  document.getElementById('fw-evts').textContent=fmtNum(d.today_calls);
+  document.getElementById('fw-evts-d').textContent=d.calls_delta||'';
+  document.getElementById('fw-wh').textContent=d.webhooks!=null?String(d.webhooks):'--';
+  document.getElementById('fw-wh-d').textContent=d.webhooks_delta||'';
+  document.getElementById('fw-lat').textContent=d.p95_latency_ms!=null?d.p95_latency_ms+'ms':'--';
+  document.getElementById('fw-lat-d').textContent=d.latency_delta||'';
+  document.getElementById('fw-err').textContent=d.error_rate!=null?d.error_rate+'%':'--';
+  document.getElementById('fw-err-d').textContent='&#9679; NOMINAL';
+  document.getElementById('fw-pip').textContent=d.pipelines!=null?String(d.pipelines):'--';
+  document.getElementById('fw-pip-d').textContent='&#9679; ACTIVE';
+  document.getElementById('fw-cost').textContent=d.cost_usd!=null?'$'+Number(d.cost_usd).toFixed(2):'--';
+  document.getElementById('fw-cost-d').textContent=d.cost_delta||'';
+  document.getElementById('fw-term').innerHTML=
+    '<span class="acc">&gt;</span> <span class="hi">FIREWORKS AI</span><br>'+
+    '<span class="acc">&gt;</span> HOST: api.fireworks.ai<br>'+
+    '<span class="acc">&gt;</span> PLAN: '+(d.plan||'--')+'<br>'+
+    '<span class="acc">&gt;</span> EVENTS: '+fmtNum(d.today_calls)+' / '+fmtNum(d.quota_limit)+'<br>'+
+    '<span class="acc">&gt;</span> BILLING: '+(d.billing_cycle||'--');
 }
 
-// ── GRAPH DATA (seeded) ────────────────────────────────────────
-function seedData(seed, len, base, amp){
-  const pts=[];let v=base,rng=seed;
-  const rand=()=>{rng=(rng*1664525+1013904223)&0xffffffff;return(rng>>>0)/0xffffffff;};
-  for(let i=0;i<len;i++){v=Math.max(base*.1,Math.min(base*2,v+(rand()-.42)*amp));pts.push(v);}
-  return pts;
-}
-const TF_DATA  = seedData(42,  48, 340, 80);   // TinyFish – 48h, higher avg
-const FW_DATA  = seedData(137, 48, 260, 110);  // Fireworks – 48h, spikier
-
-// ── SCREEN DEFINITIONS ────────────────────────────────────────
-const LS={x:14,  y:TH+55, w:154, h:260}; // left screen (TinyFish)
-const RS={x:732, y:TH+55, w:154, h:260}; // right screen (Fireworks)
-
-// Zone centres to walk to
-const TF_ZONE={x:100, y:TH+200, w:220, h:180}; // left corridor
-const FW_ZONE={x:580, y:TH+200, w:220, h:180}; // right corridor
-
-// ── NPC DATA ──────────────────────────────────────────────────
-const L_NPCS=[
-  {name:'Krzysiek',col:'#e74c3c'},{name:'Roman',   col:'#3498db'},
-  {name:'Mateusz', col:'#27ae60'},{name:'Tomek',   col:'#f39c12'},
-  {name:'Alan',    col:'#9b59b6'},{name:'Adrian',  col:'#1abc9c'},
-];
-const R_NPCS=[
-  {name:'Maciek',  col:'#e67e22'},{name:'Pati',    col:'#e91e8c'},
-  {name:'Szymon',  col:'#00bcd4'},{name:'Rode',    col:'#a855f7'},
-  {name:'Manu',    col:'#ff5722'},{name:'Mikołaj', col:'#8bc34a'},
-];
-const TABLE_X=368, TABLE_Y=TH+44, TABLE_W=164, TABLE_H=490;
-const NPC_Y_START=TH+82, NPC_Y_STEP=74;
-const L_NPC_X=308, R_NPC_X=592;
-
-// ── PIXEL DRAW HELPERS ────────────────────────────────────────
-function chair(c,x,y,facing=1,col='#2a2438'){
-  // top-down chair: seat circle + back
-  c.fillStyle=col;c.beginPath();c.ellipse(fl(x+8),fl(y+9),7,7,0,0,Math.PI*2);c.fill();
-  c.fillStyle=shd(col,.15);c.beginPath();c.ellipse(fl(x+6),fl(y+7),3,3,0,0,Math.PI*2);c.fill();
-  const backY=facing===1?y-4:y+18;
-  r(c,x+1,backY,14,5,shd(col,-.1));
-  c.strokeStyle='rgba(0,0,0,.35)';c.lineWidth=1;c.beginPath();c.ellipse(fl(x+8),fl(y+9),7,7,0,0,Math.PI*2);c.stroke();
-}
-function mic(c,x,y){
-  // mic stand
-  r(c,x+3,y+8,2,10,'#3a3a4a'); // pole
-  r(c,x,y+16,8,2,'#3a3a4a');   // base
-  // mic head
-  c.fillStyle='#5a5a7a';c.beginPath();c.ellipse(fl(x+4),fl(y+7),3,4,0,0,Math.PI*2);c.fill();
-  c.fillStyle='rgba(255,255,255,.15)';c.beginPath();c.ellipse(fl(x+3),fl(y+5),1,2,0,0,Math.PI*2);c.fill();
-  // cable
-  c.strokeStyle='rgba(50,50,70,.7)';c.lineWidth=1;c.beginPath();c.moveTo(fl(x+4),fl(y+11));c.bezierCurveTo(fl(x+4),fl(y+14),fl(x+6),fl(y+15),fl(x+4),fl(y+18));c.stroke();
-}
-function npc(c,x,y,name,bodyCol,facingRight=true){
-  // Body
-  r(c,x-5,y-18,10,8,'#f5b87a');      // head
-  r(c,x-5,y-18,10,2,'#2a1a08');      // hair
-  r(c,x-5,y-10,10,8,bodyCol);        // shirt
-  r(c,x-4,y-2, 4,5,'#1a1020');       // legs L
-  r(c,x,   y-2, 4,5,'#1a1020');      // legs R
-  // Nameplate card on table in front
-  const cardX = facingRight ? x+8 : x-30;
-  r(c,cardX,y-8,22,8,'rgba(20,16,30,.9)');
-  c.strokeStyle='rgba(255,255,255,.12)';c.lineWidth=1;c.strokeRect(fl(cardX)+.5,fl(y-8)+.5,21,7);
-  c.fillStyle='rgba(255,255,255,.5)';c.font='4px "Press Start 2P"';
-  c.textAlign='left';c.fillText(name.slice(0,6),cardX+2,y-2);
-  // Nametag bubble above
-  const nw=name.length*5+10;
-  r(c,x-nw/2,y-34,nw,12,'rgba(14,10,20,.9)');
-  c.strokeStyle='rgba(255,255,255,.15)';c.lineWidth=1;c.strokeRect(fl(x-nw/2)+.5,fl(y-34)+.5,nw-1,11);
-  r(c,x-nw/2+4,y-28,3,3,bodyCol);
-  c.fillStyle='rgba(255,255,255,.75)';c.font='5px "Press Start 2P"';c.textAlign='center';
-  c.fillText(name,x,y-24);c.textAlign='left';
-}
-function tableNotepad(c,x,y){
-  r(c,x,y,18,14,'#f0ede8');r(c,x,y,18,2,'rgba(0,0,0,.1)');
-  for(let i=0;i<4;i++)r(c,x+2,y+3+i*3,14,1,'rgba(0,0,0,.18)');
-  r(c,x+1,y,2,14,'rgba(255,127,0,.3)'); // orange left margin
-}
-function tableCup(c,x,y,col='#c0392b'){
-  r(c,x,y+3,8,8,col);r(c,x+1,y+3,6,2,shd(col,.3));
-  r(c,x-1,y+7,2,4,col);             // handle
-  r(c,x,y+2,8,2,'rgba(0,0,0,.2)'); // rim shadow
-  c.strokeStyle='rgba(0,0,0,.25)';c.lineWidth=1;c.strokeRect(fl(x)+.5,fl(y+3)+.5,7,7);
-}
-function plant(c,x,y){
-  r(c,x+4,y+12,8,8,'#7a4a28');r(c,x+3,y+12,10,2,'#9a6a40');
-  c.fillStyle='#1e5c1e';c.beginPath();c.ellipse(fl(x+8),fl(y+8),8,7,0,0,Math.PI*2);c.fill();
-  c.fillStyle='#2a7a2a';c.beginPath();c.ellipse(fl(x+6),fl(y+6),5,5,0,0,Math.PI*2);c.fill();
-  c.fillStyle='#38a038';c.beginPath();c.ellipse(fl(x+11),fl(y+4),4,4,0,0,Math.PI*2);c.fill();
+async function loadUsage(){
+  document.getElementById('loading-badge').classList.add('show');
+  try{
+    const res=await fetch('/api/v1/usage',{headers:{'Authorization':'Bearer '+jwt}});
+    if(res.status===401){logout();return;}
+    if(!res.ok)throw new Error('HTTP '+res.status);
+    const data=await res.json();
+    const tiny=data.tinyfish,fire=data.fireworks;
+    TF_DATA=(tiny.series&&tiny.series.values)?tiny.series.values:(Array.isArray(tiny.series)?tiny.series:null)||seedData(42,48,340,80);
+    FW_DATA=(fire.series&&fire.series.values)?fire.series.values:(Array.isArray(fire.series)?fire.series:null)||seedData(137,48,260,110);
+    populateTF(tiny);populateFW(fire);
+  }catch(err){
+    console.warn('Usage API failed, using demo data:',err.message);
+    TF_DATA=seedData(42,48,340,80);
+    FW_DATA=seedData(137,48,260,110);
+  }finally{
+    document.getElementById('loading-badge').classList.remove('show');
+  }
 }
 
-// ── BIG SCREEN DRAW (static shell) ─────────────────────────────
-function drawScreen(c,x,y,w,h,brand,label){
-  // outer bezel
-  r(c,x,y,w,h,'#0a0810');
+// ── LAYOUT ────────────────────────────────────────────────────
+// Two WIDE HORIZONTAL screens on the BOTTOM wall (far end of table)
+const SCR_GAP=12,SCR_H=80;
+const SCR_W=fl((W-SCR_GAP*3)/2); // ~438px each
+const LS={x:SCR_GAP,              y:H-SCR_H-14, w:SCR_W, h:SCR_H}; // TinyFish — left
+const RS={x:SCR_GAP*2+SCR_W,     y:H-SCR_H-14, w:SCR_W, h:SCR_H}; // Fireworks — right
+
+// Walk zones just above each screen
+const TF_ZONE={x:LS.x,   y:H-SCR_H-130, w:LS.w, h:110};
+const FW_ZONE={x:RS.x,   y:H-SCR_H-130, w:RS.w, h:110};
+
+// Shorter table — ends well above screens, leaving approach corridor
+const TABLE_X=368,TABLE_W=164,TABLE_Y=TH+44,TABLE_H=310;
+const NPC_Y_START=TH+86,NPC_Y_STEP=48;
+const L_NPC_X=304,R_NPC_X=596;
+
+const L_NPCS=[{name:'Krzysiek',col:'#e74c3c'},{name:'Roman',col:'#3498db'},{name:'Mateusz',col:'#27ae60'},{name:'Tomek',col:'#f39c12'},{name:'Alan',col:'#9b59b6'},{name:'Adrian',col:'#1abc9c'}];
+const R_NPCS=[{name:'Maciek',col:'#e67e22'},{name:'Pati',col:'#e91e8c'},{name:'Szymon',col:'#00bcd4'},{name:'Rode',col:'#a855f7'},{name:'Manu',col:'#ff5722'},{name:'Mikol',col:'#8bc34a'}];
+
+// ── DRAW PRIMITIVES ───────────────────────────────────────────
+function chair(c,x,y,col){col=col||'#2a2438';c.fillStyle=col;c.beginPath();c.ellipse(fl(x+8),fl(y+9),7,7,0,0,Math.PI*2);c.fill();c.fillStyle=shd(col,.15);c.beginPath();c.ellipse(fl(x+6),fl(y+7),3,3,0,0,Math.PI*2);c.fill();r(c,x+1,y-4,14,5,shd(col,-.1));c.strokeStyle='rgba(0,0,0,.35)';c.lineWidth=1;c.beginPath();c.ellipse(fl(x+8),fl(y+9),7,7,0,0,Math.PI*2);c.stroke();}
+function mic(c,x,y){r(c,x+3,y+8,2,10,'#3a3a4a');r(c,x,y+16,8,2,'#3a3a4a');c.fillStyle='#5a5a7a';c.beginPath();c.ellipse(fl(x+4),fl(y+7),3,4,0,0,Math.PI*2);c.fill();c.strokeStyle='rgba(50,50,70,.7)';c.lineWidth=1;c.beginPath();c.moveTo(fl(x+4),fl(y+11));c.bezierCurveTo(fl(x+4),fl(y+14),fl(x+6),fl(y+15),fl(x+4),fl(y+18));c.stroke();}
+function npc(c,x,y,name,col,fr){r(c,x-5,y-18,10,8,'#f5b87a');r(c,x-5,y-18,10,2,'#2a1a08');r(c,x-5,y-10,10,8,col);r(c,x-4,y-2,4,5,'#1a1020');r(c,x,y-2,4,5,'#1a1020');const cx2=fr?x+8:x-30;r(c,cx2,y-8,22,8,'rgba(20,16,30,.9)');c.strokeStyle='rgba(255,255,255,.12)';c.lineWidth=1;c.strokeRect(fl(cx2)+.5,fl(y-8)+.5,21,7);c.fillStyle='rgba(255,255,255,.5)';c.font='4px "Press Start 2P"';c.textAlign='left';c.fillText(name.slice(0,6),cx2+2,y-2);const nw=name.length*5+10;r(c,x-nw/2,y-34,nw,12,'rgba(14,10,20,.9)');c.strokeStyle='rgba(255,255,255,.15)';c.lineWidth=1;c.strokeRect(fl(x-nw/2)+.5,fl(y-34)+.5,nw-1,11);r(c,x-nw/2+4,y-28,3,3,col);c.fillStyle='rgba(255,255,255,.75)';c.font='5px "Press Start 2P"';c.textAlign='center';c.fillText(name,x,y-24);c.textAlign='left';}
+function plant(c,x,y){r(c,x+4,y+12,8,8,'#7a4a28');r(c,x+3,y+12,10,2,'#9a6a40');c.fillStyle='#1e5c1e';c.beginPath();c.ellipse(fl(x+8),fl(y+8),8,7,0,0,Math.PI*2);c.fill();c.fillStyle='#2a7a2a';c.beginPath();c.ellipse(fl(x+6),fl(y+6),5,5,0,0,Math.PI*2);c.fill();c.fillStyle='#38a038';c.beginPath();c.ellipse(fl(x+11),fl(y+4),4,4,0,0,Math.PI*2);c.fill();}
+
+// ── HORIZONTAL SCREEN SHELL ───────────────────────────────────
+function drawHScreen(c,x,y,w,h,brand,label){
+  // Dark housing
+  r(c,x,y,w,h,'#06040b');
+  // Brand border
   c.strokeStyle=brand;c.lineWidth=2;c.strokeRect(fl(x)+1,fl(y)+1,w-2,h-2);
-  // top label bar
-  r(c,x+2,y+2,w-4,10,brand+'22');
-  r(c,x+2,y+2,w-4,2,brand+'88');
-  c.fillStyle=brand;c.font='4px "Press Start 2P"';c.textAlign='center';
-  c.fillText(label,x+w/2,y+9);c.textAlign='left';
-  // screen area
-  r(c,x+4,y+14,w-8,h-22,'#030208');
-  // screen ambient light on floor
-  const g=c.createRadialGradient(x+w/2,y+h,5,x+w/2,y+h,90);
-  g.addColorStop(0,brand+'22');g.addColorStop(1,'transparent');
-  c.fillStyle=g;c.fillRect(x-20,y+h,w+40,80);
-  // wall mount bracket
-  r(c,x+fl(w*.3),y+h,fl(w*.4),8,'rgba(40,40,60,.8)');
+  // Header strip
+  r(c,x+2,y+2,w-4,11,brand+'18');
+  r(c,x+2,y+2,w-4,2,brand+'99');
+  c.fillStyle=brand;c.font='4px "Press Start 2P"';c.textAlign='left';c.fillText(label,x+6,y+10);
+  c.fillStyle='rgba(100,255,120,.65)';c.fillText('&#9679; LIVE',x+w-36,y+10);
+  c.textAlign='left';
+  // Glass area
+  r(c,x+2,y+15,w-4,h-19,'#030208');
+  // Wall mount
+  r(c,x+fl(w*.28),y+h,fl(w*.44),7,'rgba(40,40,56,.9)');
+  r(c,x+fl(w*.34),y+h+7,fl(w*.32),3,'rgba(30,30,44,.7)');
+  // Floor glow
+  const sg=c.createLinearGradient(x+w/2,y+h+10,x+w/2,y+h+60);
+  sg.addColorStop(0,brand+'16');sg.addColorStop(1,'transparent');
+  c.fillStyle=sg;c.fillRect(x-8,y+h+10,w+16,55);
 }
 
-// ── CONFERENCE TABLE ──────────────────────────────────────────
+// ── TABLE ─────────────────────────────────────────────────────
 function drawTable(c){
   const x=TABLE_X,y=TABLE_Y,w=TABLE_W,h=TABLE_H;
-  // shadow first
-  const gs=c.createRadialGradient(x+w/2,y+h/2,20,x+w/2,y+h/2,h/2+20);
-  gs.addColorStop(0,'rgba(0,0,0,.3)');gs.addColorStop(1,'transparent');
-  c.fillStyle=gs;c.fillRect(x-20,y,w+40,h);
-  // main table surface – dark walnut
   r(c,x,y,w,h,'#1c1408');
-  // wood grain lines
   c.strokeStyle='rgba(255,255,255,.025)';c.lineWidth=1;
-  for(let gy=y+20;gy<y+h;gy+=18){
-    c.beginPath();c.moveTo(x+2,fl(gy));c.lineTo(x+w-2,fl(gy));c.stroke();
-  }
-  // glass top reflection strip down centre
-  r(c,x+fl(w*.3),y+10,fl(w*.4),h-20,'rgba(255,255,255,.025)');
-  // edge highlights
-  r(c,x,y,w,3,'rgba(255,255,255,.07)'); // top edge
-  r(c,x,y,3,h,'rgba(255,255,255,.04)'); // left edge
-  r(c,x+w-3,y,3,h,'rgba(0,0,0,.3)');    // right shadow
-  r(c,x,y+h-3,w,3,'rgba(0,0,0,.4)');    // bottom shadow
-  // border
+  for(let gy=y+14;gy<y+h;gy+=14){c.beginPath();c.moveTo(x+2,fl(gy));c.lineTo(x+w-2,fl(gy));c.stroke();}
+  r(c,x+fl(w*.3),y+6,fl(w*.4),h-12,'rgba(255,255,255,.022)');
+  r(c,x,y,w,3,'rgba(255,255,255,.07)');
+  r(c,x,y,3,h,'rgba(255,255,255,.04)');
+  r(c,x+w-3,y,3,h,'rgba(0,0,0,.3)');
+  r(c,x,y+h-3,w,3,'rgba(0,0,0,.4)');
   c.strokeStyle='rgba(255,255,255,.08)';c.lineWidth=1.5;c.strokeRect(fl(x)+.5,fl(y)+.5,w-1,h-1);
-  // Power strip running down center of table (top-down shows as a thin dark rect)
-  r(c,x+fl(w/2)-4,y+60,8,h-120,'#0d0a06');
-  for(let oy=y+80;oy<y+h-80;oy+=50){
-    r(c,x+fl(w/2)-3,oy,6,4,'#222');  // outlet
-    r(c,x+fl(w/2)-1,oy+1,2,2,'#444');
-  }
-  // Table label
-  c.fillStyle='rgba(255,255,255,.06)';c.font='5px "Press Start 2P"';c.textAlign='center';
-  c.fillText('CONFERENCE TABLE',x+w/2,y+h/2+3);c.textAlign='left';
+  r(c,x+fl(w/2)-4,y+50,8,h-90,'#0d0a06');
+  for(let oy=y+64;oy<y+h-50;oy+=42){r(c,x+fl(w/2)-3,oy,6,4,'#222');r(c,x+fl(w/2)-1,oy+1,2,2,'#444');}
 }
 
-// ── ROOM BACKGROUND ────────────────────────────────────────────
+// ── BG ────────────────────────────────────────────────────────
 function drawBG(){
-  // ── DEEP CARPET FLOOR ──
   r(bc,0,TH,W,H-TH,'#0e0c16');
-  // carpet pattern (subtle diagonal texture)
   bc.strokeStyle='rgba(255,255,255,.018)';bc.lineWidth=1;
   for(let gy=TH;gy<H;gy+=T){bc.beginPath();bc.moveTo(0,fl(gy)+.5);bc.lineTo(W,fl(gy)+.5);bc.stroke();}
   for(let gx=0;gx<W;gx+=T){bc.beginPath();bc.moveTo(fl(gx)+.5,TH);bc.lineTo(fl(gx)+.5,H);bc.stroke();}
 
-  // ── TOP WALL (dark panel with accent strip) ──
-  r(bc,0,TH,W,20,'#12101a');
-  r(bc,0,TH,W,2,'rgba(255,255,255,.08)');
-  r(bc,0,TH+18,W,2,'rgba(255,255,255,.04)');
-  // ceiling light strips
-  for(let lx=60;lx<W-60;lx+=120){
-    r(bc,lx,TH,60,4,'rgba(255,255,255,.12)');
-    bc.fillStyle='rgba(255,255,255,.04)';bc.fillRect(lx-10,TH+4,80,10);
-  }
+  // Top wall + door
+  r(bc,0,TH,W,20,'#12101a');r(bc,0,TH,W,2,'rgba(255,255,255,.08)');
+  for(let lx=60;lx<W-60;lx+=120){r(bc,lx,TH,60,4,'rgba(255,255,255,.12)');bc.fillStyle='rgba(255,255,255,.04)';bc.fillRect(lx-10,TH+4,80,8);}
+  const dX=414,dW=72;
+  r(bc,dX,TH,dW,20,'#0e0c16');r(bc,dX-4,TH,4,20,'#12101a');r(bc,dX+dW,TH,4,20,'#12101a');
+  r(bc,dX,TH+18,dW,3,'rgba(255,255,255,.15)');
+  bc.fillStyle='rgba(255,255,255,.2)';bc.font='4px "Press Start 2P"';bc.textAlign='center';bc.fillText('< SDK LAB',dX+dW/2,TH+11);bc.textAlign='left';
 
-  // ── BOTTOM WALL ──
-  r(bc,0,H-20,W,20,'#12101a');
-  r(bc,0,H-2,W,2,'rgba(255,255,255,.06)');
-  // ceiling lights mirrored
-  for(let lx=60;lx<W-60;lx+=120){
-    r(bc,lx,H-4,60,4,'rgba(255,255,255,.12)');
-  }
+  // Bottom wall (where screens are mounted)
+  r(bc,0,H-14,W,14,'#12101a');r(bc,0,H-14,W,1,'rgba(255,255,255,.06)');
+  for(let lx=60;lx<W-60;lx+=120)r(bc,lx,H-4,60,4,'rgba(255,255,255,.08)');
 
-  // ── LEFT WALL PANEL ──
-  r(bc,0,TH,18,H-TH,'#100e18');
-  r(bc,16,TH,2,H-TH,'rgba(255,255,255,.04)');
+  // Side walls
+  r(bc,0,TH,18,H-TH,'#100e18');r(bc,16,TH,2,H-TH,'rgba(255,255,255,.04)');
+  r(bc,882,TH,18,H-TH,'#100e18');r(bc,882,TH,2,H-TH,'rgba(255,255,255,.04)');
 
-  // ── RIGHT WALL PANEL ──
-  r(bc,882,TH,18,H-TH,'#100e18');
-  r(bc,882,TH,2,H-TH,'rgba(255,255,255,.04)');
+  // ── HORIZONTAL SCREENS (bottom wall) ──
+  drawHScreen(bc,LS.x,LS.y,LS.w,LS.h,TF,'TINYFISH API USAGE');
+  drawHScreen(bc,RS.x,RS.y,RS.w,RS.h,FW,'FIREWORKS AI USAGE');
+  // Cable trunkings
+  r(bc,2,LS.y+8,LS.x-2,3,'rgba(28,26,38,.9)');
+  r(bc,RS.x+RS.w,RS.y+8,W-RS.x-RS.w-16,3,'rgba(28,26,38,.9)');
+  // Cable between two screens
+  r(bc,LS.x+LS.w,LS.y+LS.h/2-1,SCR_GAP,3,'rgba(28,26,38,.7)');
 
-  // ── DOOR (top centre — back to SDK lab) ──
-  const doorX=414,doorW=72;
-  r(bc,doorX,TH,doorW,20,'#0e0c16'); // opening
-  r(bc,doorX-4,TH,4,20,'#12101a');   // left frame
-  r(bc,doorX+doorW,TH,4,20,'#12101a'); // right frame
-  r(bc,doorX,TH+18,doorW,3,'rgba(255,255,255,.15)'); // threshold
-  bc.fillStyle='rgba(255,255,255,.2)';bc.font='4px "Press Start 2P"';bc.textAlign='center';
-  bc.fillText('◀ SDK LAB',doorX+doorW/2,TH+11);bc.textAlign='left';
-
-  // ── LEFT SCREEN (TinyFish) ──
-  drawScreen(bc,LS.x,LS.y,LS.w,LS.h,TF,'TINYFISH API');
-  // projector mount
-  r(bc,LS.x+30,LS.y-8,LS.w-60,8,'rgba(40,40,60,.6)');
-  // cable trunking down left wall
-  r(bc,2,LS.y,4,LS.h,'rgba(30,28,40,.8)');
-
-  // ── RIGHT SCREEN (Fireworks) ──
-  drawScreen(bc,RS.x,RS.y,RS.w,RS.h,FW,'FIREWORKS AI');
-  r(bc,RS.x+30,RS.y-8,RS.w-60,8,'rgba(40,40,60,.6)');
-  r(bc,894,RS.y,4,RS.h,'rgba(30,28,40,.8)');
-
-  // ── CONFERENCE TABLE ──
+  // ── TABLE ──
   drawTable(bc);
 
-  // ── LEFT SIDE CHAIRS + NPCS + MICS ──
+  // ── SIDE NPCs ──
   L_NPCS.forEach((n,i)=>{
-    const cx=L_NPC_X-18, cy=NPC_Y_START+i*NPC_Y_STEP;
-    chair(bc,cx,cy,1,`${n.col}44`);
+    const cy=NPC_Y_START+i*NPC_Y_STEP;
+    chair(bc,L_NPC_X-18,cy,n.col+'44');
     npc(bc,L_NPC_X,cy,n.name,n.col,true);
-    // mic on table edge
     mic(bc,TABLE_X+4,cy-4);
-    // notepad + cup on table
-    tableNotepad(bc,TABLE_X+20,cy-6);
-    tableCup(bc,TABLE_X+44,cy-4,n.col);
+    r(bc,TABLE_X+18,cy-6,18,14,'#f0ede8');for(let k=0;k<4;k++)r(bc,TABLE_X+20,cy-3+k*3,14,1,'rgba(0,0,0,.18)');
+    r(bc,TABLE_X+42,cy-1,8,8,n.col);r(bc,TABLE_X+43,cy-1,6,2,shd(n.col,.3));
   });
-
-  // ── RIGHT SIDE CHAIRS + NPCS + MICS ──
   R_NPCS.forEach((n,i)=>{
-    const cx=R_NPC_X+2, cy=NPC_Y_START+i*NPC_Y_STEP;
-    chair(bc,cx,cy,-1,`${n.col}44`);
+    const cy=NPC_Y_START+i*NPC_Y_STEP;
+    chair(bc,R_NPC_X+2,cy,n.col+'44');
     npc(bc,R_NPC_X,cy,n.name,n.col,false);
-    // mic
     mic(bc,TABLE_X+TABLE_W-14,cy-4);
-    // notepad + cup
-    tableNotepad(bc,TABLE_X+TABLE_W-46,cy-6);
-    tableCup(bc,TABLE_X+TABLE_W-62,cy-4,n.col);
+    r(bc,TABLE_X+TABLE_W-46,cy-6,18,14,'#f0ede8');for(let k=0;k<4;k++)r(bc,TABLE_X+TABLE_W-44,cy-3+k*3,14,1,'rgba(0,0,0,.18)');
+    r(bc,TABLE_X+TABLE_W-62,cy-1,8,8,n.col);r(bc,TABLE_X+TABLE_W-61,cy-1,6,2,shd(n.col,.3));
   });
 
-  // ── HEAD SEAT (top of table — presenter) ──
-  chair(bc,TABLE_X+TABLE_W/2-9,TH+24,1,'#2a2438');
-  npc(bc,TABLE_X+TABLE_W/2,TH+48,'Kubuś','#ffd700',true);
-  mic(bc,TABLE_X+TABLE_W/2-4,TH+34);
+  // Head seat + presenter NPC (top, faces screens at bottom)
+  chair(bc,TABLE_X+TABLE_W/2-9,TH+24,'#2a2438');
+  npc(bc,TABLE_X+TABLE_W/2,TH+48,'Kubus','#ffd700',true);
+  mic(bc,TABLE_X+TABLE_W/2-4,TH+32);
 
-  // ── FOOT SEAT (bottom — for player to sit) ──
-  chair(bc,TABLE_X+TABLE_W/2-9,H-44,1,'#2a2438');
+  // Foot chair near screens (player approaches from here)
+  chair(bc,TABLE_X+TABLE_W/2-9,TABLE_Y+TABLE_H+22,'#1e1c2c');
 
-  // ── CORNER PLANTS ──
-  plant(bc,20,TH+28);
-  plant(bc,862,TH+28);
-  plant(bc,20,H-56);
-  plant(bc,862,H-56);
+  // Corner plants
+  plant(bc,20,TH+28);plant(bc,862,TH+28);
+  plant(bc,20,H-78);plant(bc,862,H-78);
 
-  // ── ZONE INDICATORS (floor markings in front of screens) ──
-  bc.strokeStyle='rgba(255,103,0,.12)';bc.lineWidth=1;bc.setLineDash([4,4]);
+  // Zone floor markings
+  bc.strokeStyle='rgba(255,103,0,.09)';bc.lineWidth=1;bc.setLineDash([4,4]);
   bc.strokeRect(TF_ZONE.x+.5,fl(TF_ZONE.y)+.5,TF_ZONE.w-1,TF_ZONE.h-1);
-  bc.strokeStyle='rgba(103,32,255,.12)';
+  bc.strokeStyle='rgba(103,32,255,.09)';
   bc.strokeRect(FW_ZONE.x+.5,fl(FW_ZONE.y)+.5,FW_ZONE.w-1,FW_ZONE.h-1);
   bc.setLineDash([]);
-
-  // Labels near zones
-  bc.fillStyle='rgba(255,103,0,.15)';bc.font='4px "Press Start 2P"';bc.textAlign='center';
-  bc.fillText('TINYFISH METRICS',TF_ZONE.x+TF_ZONE.w/2,TF_ZONE.y+TF_ZONE.h+10);
-  bc.fillStyle='rgba(103,32,255,.2)';
-  bc.fillText('FIREWORKS METRICS',FW_ZONE.x+FW_ZONE.w/2,FW_ZONE.y+FW_ZONE.h+10);
+  bc.fillStyle='rgba(255,103,0,.11)';bc.font='4px "Press Start 2P"';bc.textAlign='center';
+  bc.fillText('TINYFISH ZONE',TF_ZONE.x+TF_ZONE.w/2,TF_ZONE.y-3);
+  bc.fillStyle='rgba(103,32,255,.14)';
+  bc.fillText('FIREWORKS ZONE',FW_ZONE.x+FW_ZONE.w/2,FW_ZONE.y-3);
   bc.textAlign='left';
 }
 drawBG();
 
-// ── PLAYER CANVAS SPRITE ──────────────────────────────────────
+// ── GRAPH RENDERER (horizontal-optimised) ─────────────────────
+function drawLineGraph(c,x,y,w,h,data,brand,t){
+  if(!data||data.length<2){r(c,x,y,w,h,'#030208');c.fillStyle='rgba(255,255,255,.1)';c.font='5px "Press Start 2P"';c.textAlign='center';c.fillText('NO DATA',x+w/2,y+h/2+2);c.textAlign='left';return;}
+  r(c,x,y,w,h,'#030208');
+  const PAD_L=26,PAD_B=10;
+  const gw=w-PAD_L-2,gh=h-PAD_B-2;
+  // Grid
+  c.strokeStyle='rgba(255,255,255,.06)';c.lineWidth=1;
+  for(let i=0;i<=3;i++){const gy=y+1+fl(gh*i/3);c.beginPath();c.moveTo(x+PAD_L,gy+.5);c.lineTo(x+PAD_L+gw,gy+.5);c.stroke();}
+  for(let i=1;i<=6;i++){const gx=x+PAD_L+fl(gw*i/6);c.beginPath();c.moveTo(gx+.5,y+1);c.lineTo(gx+.5,y+1+gh);c.stroke();}
+  // Y labels
+  const mx=Math.max(...data),mn=Math.min(...data);
+  c.fillStyle='rgba(255,255,255,.2)';c.font='4px "Press Start 2P"';
+  for(let i=0;i<=2;i++){const val=fl(mx-(mx-mn)*i/2);c.fillText(val<1000?String(val):fl(val/100)/10+'k',x+1,y+3+fl(gh*i/2));}
+  // Clip to graph region
+  c.save();c.beginPath();c.rect(x+PAD_L,y+1,gw,gh);c.clip();
+  // Scroll
+  const scroll=fl(t*.01)%data.length;
+  const pts=[];for(let i=0;i<data.length;i++)pts.push(data[(i+scroll)%data.length]);
+  const range=mx-mn||1;
+  const pY=v=>y+1+gh-1-fl((v-mn)/range*(gh-2));
+  const pX=i=>x+PAD_L+fl(i/(pts.length-1)*gw);
+  // Area fill
+  const ag=c.createLinearGradient(0,y,0,y+h);
+  ag.addColorStop(0,brand+'58');ag.addColorStop(1,brand+'06');
+  c.fillStyle=ag;
+  c.beginPath();c.moveTo(pX(0),y+1+gh);
+  for(let i=0;i<pts.length;i++)c.lineTo(pX(i),pY(pts[i]));
+  c.lineTo(pX(pts.length-1),y+1+gh);c.closePath();c.fill();
+  // Line
+  c.strokeStyle=brand;c.lineWidth=2;c.lineJoin='round';c.lineCap='round';
+  c.beginPath();for(let i=0;i<pts.length;i++)i===0?c.moveTo(pX(i),pY(pts[i])):c.lineTo(pX(i),pY(pts[i]));c.stroke();
+  // Live dot at right edge
+  const la=0.5+0.5*Math.sin(t*.01);
+  const ex=pX(pts.length-1),ey=pY(pts[pts.length-1]);
+  c.fillStyle=brand;c.globalAlpha=la;c.beginPath();c.arc(ex,ey,3,0,Math.PI*2);c.fill();
+  c.globalAlpha=.22;c.beginPath();c.arc(ex,ey,7,0,Math.PI*2);c.fill();
+  c.globalAlpha=1;
+  c.restore();
+  // Time labels
+  c.fillStyle='rgba(255,255,255,.16)';c.font='3px "Press Start 2P"';
+  c.fillText('-12h',x+PAD_L+2,y+h-1);c.fillText('NOW',x+w-16,y+h-1);
+}
+
+// ── PLAYER ────────────────────────────────────────────────────
 const playerEl=document.getElementById('player');
 const nametag=document.getElementById('nametag');
-const pCv=document.createElement('canvas');
-pCv.width=20;pCv.height=26;pCv.style.cssText='image-rendering:pixelated;position:absolute;top:0;left:0;';
-playerEl.appendChild(pCv);
-const pc=pCv.getContext('2d');pc.imageSmoothingEnabled=false;
+const pCv=document.createElement('canvas');pCv.width=20;pCv.height=26;pCv.style.cssText='image-rendering:pixelated;position:absolute;top:0;left:0;';
+playerEl.appendChild(pCv);const pc=pCv.getContext('2d');pc.imageSmoothingEnabled=false;
 let walkFrame=0,facingDir=1;
-
 function drawPlayer(frame,dir){
-  pc.clearRect(0,0,20,26);
-  if(dir<0){pc.save();pc.scale(-1,1);pc.translate(-20,0);}
+  pc.clearRect(0,0,20,26);if(dir<0){pc.save();pc.scale(-1,1);pc.translate(-20,0);}
   r(pc,5,0,10,6,'#2a1a08');r(pc,3,2,14,4,'#2a1a08');
   r(pc,4,4,12,8,'#f5b87a');r(pc,2,5,2,5,'#f5b87a');r(pc,16,5,2,5,'#f5b87a');
-  r(pc,6,7,2,2,'#1a1020');r(pc,12,7,2,2,'#1a1020');
-  r(pc,8,10,4,1,'#c8703a');
-  // formal jacket (conference room look)
+  r(pc,6,7,2,2,'#1a1020');r(pc,12,7,2,2,'#1a1020');r(pc,8,10,4,1,'#c8703a');
   r(pc,3,12,14,8,'#2a2060');r(pc,2,13,1,5,'#1a1540');r(pc,17,13,1,5,'#1a1540');
-  r(pc,8,12,4,4,'#f0f0f0'); // shirt collar/tie
-  r(pc,9,14,2,5,'#e74c3c'); // red tie
-  r(pc,3,19,14,2,'#1a1020');
-  const lOff=frame%2===0?0:2;
-  r(pc,4,21,5,5,'#1a1838');r(pc,11,21,5,5,'#1a1838');
-  r(pc,4,21+lOff,5,2,'#2a2848');r(pc,11,21+(2-lOff),5,2,'#2a2848');
-  r(pc,3,25,6,1,'#111');r(pc,11,25,6,1,'#111');
-  if(dir<0)pc.restore();
+  r(pc,8,12,4,4,'#f0f0f0');r(pc,9,14,2,5,'#e74c3c');r(pc,3,19,14,2,'#1a1020');
+  const lO=frame%2===0?0:2;r(pc,4,21,5,5,'#1a1838');r(pc,11,21,5,5,'#1a1838');
+  r(pc,4,21+lO,5,2,'#2a2848');r(pc,11,21+(2-lO),5,2,'#2a2848');
+  r(pc,3,25,6,1,'#111');r(pc,11,25,6,1,'#111');if(dir<0)pc.restore();
 }
-
-let px=450,py=TH+30;
-drawPlayer(0,facingDir);
-function syncPlayer(){
-  playerEl.style.left=(px-10)+'px';
-  playerEl.style.top =(py-26)+'px';
-  nametag.style.left =px+'px';
-  nametag.style.top  =(py-42)+'px';
-}
+let px=450,py=TH+36;drawPlayer(0,facingDir);
+function syncPlayer(){playerEl.style.left=(px-10)+'px';playerEl.style.top=(py-26)+'px';nametag.style.left=px+'px';nametag.style.top=(py-42)+'px';}
 syncPlayer();
 
 // ── INPUT ─────────────────────────────────────────────────────
 const keys={};
 addEventListener('keydown',e=>{keys[e.key]=true;if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key))e.preventDefault();});
-addEventListener('keyup',  e=>{keys[e.key]=false;});
+addEventListener('keyup',e=>{keys[e.key]=false;});
 let clickTarget=null;
 const wrap=document.getElementById('wrap');
-wrap.addEventListener('mousemove',e=>{
-  const rect=e.currentTarget.getBoundingClientRect();
-  document.getElementById('cursor').style.left=((e.clientX-rect.left)*(W/rect.width))+'px';
-  document.getElementById('cursor').style.top =((e.clientY-rect.top)*(H/rect.height))+'px';
-});
-wrap.addEventListener('click',e=>{
-  if(activeZone)return;
-  const rect=e.currentTarget.getBoundingClientRect();
-  clickTarget={x:(e.clientX-rect.left)*(W/rect.width),y:(e.clientY-rect.top)*(H/rect.height)};
-});
+wrap.addEventListener('mousemove',e=>{const rect=e.currentTarget.getBoundingClientRect();document.getElementById('cursor').style.left=((e.clientX-rect.left)*(W/rect.width))+'px';document.getElementById('cursor').style.top=((e.clientY-rect.top)*(H/rect.height))+'px';});
+wrap.addEventListener('click',e=>{if(activeZone)return;const rect=e.currentTarget.getBoundingClientRect();clickTarget={x:(e.clientX-rect.left)*(W/rect.width),y:(e.clientY-rect.top)*(H/rect.height)};});
 
 // ── ZONES ─────────────────────────────────────────────────────
-let activeZone=null; // null | 'tinyfish' | 'fireworks'
-
-function openTF(){
-  if(activeZone)return;activeZone='tinyfish';clickTarget=null;
-  document.getElementById('tf-panel').classList.add('open');
-}
+let activeZone=null;
+function openTF(){if(activeZone)return;activeZone='tinyfish';clickTarget=null;document.getElementById('tf-panel').classList.add('open');}
 function closeTF(){activeZone=null;document.getElementById('tf-panel').classList.remove('open');}
-function openFW(){
-  if(activeZone)return;activeZone='fireworks';clickTarget=null;
-  document.getElementById('fw-panel').classList.add('open');
-}
+function openFW(){if(activeZone)return;activeZone='fireworks';clickTarget=null;document.getElementById('fw-panel').classList.add('open');}
 function closeFW(){activeZone=null;document.getElementById('fw-panel').classList.remove('open');}
 
-// ── LINE GRAPH RENDERER ────────────────────────────────────────
-function drawLineGraph(c,x,y,w,h,data,brand,label,t){
-  // Background
-  r(c,x,y,w,h,'#030208');
-  // Grid
-  const gridAlpha=0.08;
-  c.strokeStyle=`rgba(255,255,255,${gridAlpha})`;c.lineWidth=1;
-  for(let gi=0;gi<=4;gi++){
-    const gy=y+fl(h*gi/4);
-    c.beginPath();c.moveTo(x,gy+.5);c.lineTo(x+w,gy+.5);c.stroke();
+// ── COLLISION ─────────────────────────────────────────────────
+function clampPos(nx,ny){
+  nx=Math.max(22,Math.min(W-22,nx));ny=Math.max(TH+16,Math.min(H-16,ny));
+  const bx=12,by=8;
+  if(nx>TABLE_X-bx&&nx<TABLE_X+TABLE_W+bx&&ny>TABLE_Y+by&&ny<TABLE_Y+TABLE_H-by){
+    const dL=nx-(TABLE_X-bx),dR=(TABLE_X+TABLE_W+bx)-nx,dT=ny-(TABLE_Y+by),dB=(TABLE_Y+TABLE_H-by)-ny;
+    const m=Math.min(dL,dR,dT,dB);
+    if(m===dL)nx=TABLE_X-bx;else if(m===dR)nx=TABLE_X+TABLE_W+bx;else if(m===dT)ny=TABLE_Y+by;else ny=TABLE_Y+TABLE_H-by;
   }
-  for(let gi=0;gi<=5;gi++){
-    const gx=x+fl(w*gi/5);
-    c.beginPath();c.moveTo(gx+.5,y);c.lineTo(gx+.5,y+h);c.stroke();
-  }
-  // Y-axis labels
-  const mx=Math.max(...data),mn=Math.min(...data);
-  c.fillStyle='rgba(255,255,255,.25)';c.font='3px "Press Start 2P"';
-  for(let gi=0;gi<=2;gi++){
-    const val=fl(mx-(mx-mn)*gi/2);
-    c.fillText(val,x+2,y+fl(h*gi/2)+4);
-  }
-  // Clip draw area
-  c.save();c.beginPath();c.rect(x,y,w,h);c.clip();
-  // Animated data (scroll effect: data moves left as t increases)
-  const scroll=fl(t*.015)%data.length;
-  const pts=[];
-  for(let i=0;i<data.length;i++){
-    const di=(i+scroll)%data.length;
-    pts.push(data[di]);
-  }
-  const range=mx-mn||1;
-  const toY=(v)=>y+h-1-fl((v-mn)/range*(h-4));
-  const toX=(i)=>x+1+fl(i/(pts.length-1)*(w-2));
-  // Area fill
-  const ag=c.createLinearGradient(0,y,0,y+h);
-  ag.addColorStop(0,brand+'55');ag.addColorStop(1,brand+'00');
-  c.fillStyle=ag;
-  c.beginPath();c.moveTo(toX(0),y+h);
-  for(let i=0;i<pts.length;i++)c.lineTo(toX(i),toY(pts[i]));
-  c.lineTo(toX(pts.length-1),y+h);c.closePath();c.fill();
-  // Line
-  c.strokeStyle=brand;c.lineWidth=1.5;c.lineJoin='round';
-  c.beginPath();
-  for(let i=0;i<pts.length;i++){
-    i===0?c.moveTo(toX(i),toY(pts[i])):c.lineTo(toX(i),toY(pts[i]));
-  }
-  c.stroke();
-  // Live dot (blinking at right edge)
-  const liveAlpha=0.5+0.5*Math.sin(t*.01);
-  const lastX=toX(pts.length-1),lastY=toY(pts[pts.length-1]);
-  c.fillStyle=brand;c.globalAlpha=liveAlpha;
-  c.beginPath();c.arc(lastX,lastY,3,0,Math.PI*2);c.fill();
-  c.globalAlpha=0.3;c.beginPath();c.arc(lastX,lastY,6,0,Math.PI*2);c.fill();
-  c.globalAlpha=1;
-  // Restore clip
-  c.restore();
-  // X-axis time labels
-  c.fillStyle='rgba(255,255,255,.2)';c.font='3px "Press Start 2P"';
-  c.fillText('-24h',x+2,y+h+6);c.fillText('NOW',x+w-14,y+h+6);
+  return{x:nx,y:ny};
 }
 
 // ── OVERLAY ───────────────────────────────────────────────────
 function drawOverlay(t){
   oc.clearRect(0,0,W,H);
+  const tfD=TF_DATA||seedData(42,48,340,80);
+  const fwD=FW_DATA||seedData(137,48,260,110);
 
-  // ── DRAW LIVE GRAPHS ON SCREENS ──
-  drawLineGraph(oc,LS.x+4,LS.y+14,LS.w-8,LS.h-22,TF_DATA,TF,'tinyfish',t);
-  drawLineGraph(oc,RS.x+4,RS.y+14,RS.w-8,RS.h-22,FW_DATA,FW,'fireworks',t);
-
-  // ── SCREEN GLOWS ──
-  // TinyFish ambient glow on left
-  const tg=oc.createRadialGradient(LS.x+LS.w/2,LS.y+LS.h*.6,10,LS.x+LS.w/2,LS.y+LS.h*.6,160);
-  tg.addColorStop(0,'rgba(255,103,0,.08)');tg.addColorStop(1,'transparent');
-  oc.fillStyle=tg;oc.fillRect(0,LS.y-20,LS.x+LS.w+180,LS.h+80);
-  // Fireworks ambient glow on right
-  const fg=oc.createRadialGradient(RS.x+RS.w/2,RS.y+RS.h*.6,10,RS.x+RS.w/2,RS.y+RS.h*.6,160);
-  fg.addColorStop(0,'rgba(103,32,255,.1)');fg.addColorStop(1,'transparent');
-  oc.fillStyle=fg;oc.fillRect(RS.x-180,RS.y-20,RS.w+180,RS.h+80);
+  // Draw graphs inside screen glass
+  drawLineGraph(oc,LS.x+2,LS.y+15,LS.w-4,LS.h-19,tfD,TF,t);
+  drawLineGraph(oc,RS.x+2,RS.y+15,RS.w-4,RS.h-19,fwD,FW,t);
 
   // Screen border flicker
-  const flicker=0.6+0.4*Math.sin(t*.003);
-  oc.strokeStyle=`rgba(255,103,0,${flicker*.5})`;oc.lineWidth=1;
-  oc.strokeRect(LS.x+1.5,LS.y+1.5,LS.w-3,LS.h-3);
-  oc.strokeStyle=`rgba(103,32,255,${flicker*.5})`;
-  oc.strokeRect(RS.x+1.5,RS.y+1.5,RS.w-3,RS.h-3);
+  const flk=0.55+0.35*Math.sin(t*.003);
+  oc.strokeStyle='rgba(255,103,0,'+(flk*.4)+')';oc.lineWidth=1;oc.strokeRect(LS.x+2,LS.y+2,LS.w-4,LS.h-4);
+  oc.strokeStyle='rgba(103,32,255,'+(flk*.4)+')';oc.strokeRect(RS.x+2,RS.y+2,RS.w-4,RS.h-4);
 
-  // ── PROXIMITY EFFECTS ──
-  const tfDist=Math.hypot(px-(TF_ZONE.x+TF_ZONE.w/2),py-(TF_ZONE.y+TF_ZONE.h/2));
-  const fwDist=Math.hypot(px-(FW_ZONE.x+FW_ZONE.w/2),py-(FW_ZONE.y+FW_ZONE.h/2));
-  const tfNear=tfDist<160,fwNear=fwDist<160;
+  // Screen glow cast upward onto floor/walls
+  const tga=0.05+0.03*Math.sin(t*.004);
+  const tg=oc.createLinearGradient(LS.x+LS.w/2,LS.y,LS.x+LS.w/2,LS.y-120);
+  tg.addColorStop(0,'rgba(255,103,0,'+tga+')');tg.addColorStop(1,'transparent');
+  oc.fillStyle=tg;oc.fillRect(LS.x-10,LS.y-120,LS.w+20,125);
+  const fga=0.07+0.04*Math.sin(t*.004);
+  const fg=oc.createLinearGradient(RS.x+RS.w/2,RS.y,RS.x+RS.w/2,RS.y-120);
+  fg.addColorStop(0,'rgba(103,32,255,'+fga+')');fg.addColorStop(1,'transparent');
+  oc.fillStyle=fg;oc.fillRect(RS.x-10,RS.y-120,RS.w+20,125);
+
+  // Proximity prompts
+  const tfNear=Math.hypot(px-(LS.x+LS.w/2),py-(TF_ZONE.y+TF_ZONE.h/2))<220;
+  const fwNear=Math.hypot(px-(RS.x+RS.w/2),py-(FW_ZONE.y+FW_ZONE.h/2))<220;
 
   if(tfNear&&activeZone!=='tinyfish'){
     const p=0.3+0.25*Math.sin(t*.007);
     oc.strokeStyle='#FF6700';oc.globalAlpha=p;oc.lineWidth=2;
-    oc.setLineDash([5,4]);oc.strokeRect(LS.x+1.5,LS.y+1.5,LS.w-3,LS.h-3);oc.setLineDash([]);oc.globalAlpha=1;
+    oc.setLineDash([5,4]);oc.strokeRect(LS.x+2,LS.y+2,LS.w-4,LS.h-4);oc.setLineDash([]);oc.globalAlpha=1;
     const bob=Math.sin(t*.005)*4;
-    oc.fillStyle='#FF6700';oc.globalAlpha=0.9;
-    oc.beginPath();oc.moveTo(LS.x+LS.w/2,LS.y+LS.h+14+bob);
-    oc.lineTo(LS.x+LS.w/2-8,LS.y+LS.h+6+bob);
-    oc.lineTo(LS.x+LS.w/2+8,LS.y+LS.h+6+bob);oc.fill();
-    oc.font='4px "Press Start 2P"';oc.textAlign='center';
-    oc.fillText('VIEW STATS',LS.x+LS.w/2,LS.y+LS.h+18+bob);
+    oc.fillStyle='#FF6700';oc.globalAlpha=.88;
+    oc.beginPath();oc.moveTo(LS.x+LS.w/2,LS.y-6+bob);oc.lineTo(LS.x+LS.w/2-9,LS.y-16+bob);oc.lineTo(LS.x+LS.w/2+9,LS.y-16+bob);oc.fill();
+    oc.font='5px "Press Start 2P"';oc.textAlign='center';
+    oc.fillText('VIEW TINYFISH STATS',LS.x+LS.w/2,LS.y-20+bob);
     oc.globalAlpha=1;oc.textAlign='left';
   }
   if(fwNear&&activeZone!=='fireworks'){
     const p=0.3+0.25*Math.sin(t*.007);
-    oc.strokeStyle='#6720FF';oc.globalAlpha=p;oc.lineWidth=2;
-    oc.setLineDash([5,4]);oc.strokeRect(RS.x+1.5,RS.y+1.5,RS.w-3,RS.h-3);oc.setLineDash([]);oc.globalAlpha=1;
+    oc.strokeStyle='#a060ff';oc.globalAlpha=p;oc.lineWidth=2;
+    oc.setLineDash([5,4]);oc.strokeRect(RS.x+2,RS.y+2,RS.w-4,RS.h-4);oc.setLineDash([]);oc.globalAlpha=1;
     const bob=Math.sin(t*.005)*4;
-    oc.fillStyle='#a060ff';oc.globalAlpha=0.9;
-    oc.beginPath();oc.moveTo(RS.x+RS.w/2,RS.y+RS.h+14+bob);
-    oc.lineTo(RS.x+RS.w/2-8,RS.y+RS.h+6+bob);
-    oc.lineTo(RS.x+RS.w/2+8,RS.y+RS.h+6+bob);oc.fill();
-    oc.font='4px "Press Start 2P"';oc.textAlign='center';
-    oc.fillText('VIEW STATS',RS.x+RS.w/2,RS.y+RS.h+18+bob);
+    oc.fillStyle='#a060ff';oc.globalAlpha=.88;
+    oc.beginPath();oc.moveTo(RS.x+RS.w/2,RS.y-6+bob);oc.lineTo(RS.x+RS.w/2-9,RS.y-16+bob);oc.lineTo(RS.x+RS.w/2+9,RS.y-16+bob);oc.fill();
+    oc.font='5px "Press Start 2P"';oc.textAlign='center';
+    oc.fillText('VIEW FIREWORKS STATS',RS.x+RS.w/2,RS.y-20+bob);
     oc.globalAlpha=1;oc.textAlign='left';
   }
 
-  // ── CEILING LIGHT CONES ──
+  // Ceiling light cones
   for(let lx=60;lx<W-60;lx+=120){
-    const lg=oc.createLinearGradient(lx+30,TH,lx+30,TH+90);
-    lg.addColorStop(0,'rgba(255,255,255,.06)');lg.addColorStop(1,'transparent');
-    oc.fillStyle=lg;
-    oc.beginPath();oc.moveTo(lx+10,TH+4);oc.lineTo(lx+50,TH+4);oc.lineTo(lx+80,TH+90);oc.lineTo(lx-20,TH+90);oc.fill();
+    const lg=oc.createLinearGradient(lx+30,TH,lx+30,TH+80);
+    lg.addColorStop(0,'rgba(255,255,255,.055)');lg.addColorStop(1,'transparent');
+    oc.fillStyle=lg;oc.beginPath();oc.moveTo(lx+10,TH+4);oc.lineTo(lx+50,TH+4);oc.lineTo(lx+82,TH+80);oc.lineTo(lx-22,TH+80);oc.fill();
   }
 
-  // ── MIC INDICATOR DOTS ── (blinking "on-air" on each mic)
-  const micOn=fl(t/300)%3!==2;
+  // Mic on-air red LEDs
+  const micOn=fl(t/275)%3!==2;
   if(micOn){
-    [...L_NPCS,...R_NPCS].forEach((_,i)=>{
-      const isLeft=i<L_NPCS.length;
-      const cy=NPC_Y_START+i%6*NPC_Y_STEP;
-      const mx2=isLeft?TABLE_X+8:TABLE_X+TABLE_W-10;
-      oc.fillStyle=`rgba(255,60,60,${0.6+0.4*Math.sin(t*.008+i)})`;
-      oc.fillRect(fl(mx2),fl(cy-8),3,3);
-    });
+    L_NPCS.forEach((_,i)=>{const cy=NPC_Y_START+i*NPC_Y_STEP;oc.fillStyle='rgba(255,55,55,'+(0.6+0.4*Math.sin(t*.009+i))+')';oc.fillRect(fl(TABLE_X+8),fl(cy-8),3,3);});
+    R_NPCS.forEach((_,i)=>{const cy=NPC_Y_START+i*NPC_Y_STEP;oc.fillStyle='rgba(255,55,55,'+(0.6+0.4*Math.sin(t*.009+i+6))+')';oc.fillRect(fl(TABLE_X+TABLE_W-11),fl(cy-8),3,3);});
   }
 
-  // Click target ring
+  // Click target spinner
   if(clickTarget&&!activeZone){
-    const q=t*.01;
-    oc.strokeStyle='rgba(255,255,255,.4)';oc.lineWidth=1.5;
+    const q=t*.01;oc.strokeStyle='rgba(255,255,255,.4)';oc.lineWidth=1.5;
     oc.beginPath();oc.arc(fl(clickTarget.x),fl(clickTarget.y),6,q,q+Math.PI*1.5);oc.stroke();
   }
 }
@@ -709,84 +555,37 @@ function drawOverlay(t){
 function drawMinimap(){
   const sx=90/W,sy=58/H;
   mc.fillStyle='#06040a';mc.fillRect(0,0,90,58);
-  // Table
-  mc.fillStyle='rgba(80,60,20,.5)';
-  mc.fillRect(fl(TABLE_X*sx),fl(TABLE_Y*sy),fl(TABLE_W*sx),fl(TABLE_H*sy));
-  // Screens
-  mc.fillStyle='rgba(255,103,0,.4)';mc.fillRect(fl(LS.x*sx),fl(LS.y*sy),fl(LS.w*sx),fl(LS.h*sy));
-  mc.fillStyle='rgba(103,32,255,.5)';mc.fillRect(fl(RS.x*sx),fl(RS.y*sy),fl(RS.w*sx),fl(RS.h*sy));
-  // Zones
-  mc.strokeStyle='rgba(255,103,0,.3)';mc.lineWidth=1;
-  mc.strokeRect(fl(TF_ZONE.x*sx),fl(TF_ZONE.y*sy),fl(TF_ZONE.w*sx),fl(TF_ZONE.h*sy));
-  mc.strokeStyle='rgba(103,32,255,.3)';
-  mc.strokeRect(fl(FW_ZONE.x*sx),fl(FW_ZONE.y*sy),fl(FW_ZONE.w*sx),fl(FW_ZONE.h*sy));
-  // Player
+  mc.fillStyle='rgba(80,60,20,.5)';mc.fillRect(fl(TABLE_X*sx),fl(TABLE_Y*sy),fl(TABLE_W*sx),fl(TABLE_H*sy));
+  mc.fillStyle='rgba(255,103,0,.5)';mc.fillRect(fl(LS.x*sx),fl(LS.y*sy),fl(LS.w*sx),fl(LS.h*sy));
+  mc.fillStyle='rgba(103,32,255,.6)';mc.fillRect(fl(RS.x*sx),fl(RS.y*sy),fl(RS.w*sx),fl(RS.h*sy));
+  mc.strokeStyle='rgba(255,103,0,.3)';mc.lineWidth=1;mc.strokeRect(fl(TF_ZONE.x*sx),fl(TF_ZONE.y*sy),fl(TF_ZONE.w*sx),fl(TF_ZONE.h*sy));
+  mc.strokeStyle='rgba(103,32,255,.3)';mc.strokeRect(fl(FW_ZONE.x*sx),fl(FW_ZONE.y*sy),fl(FW_ZONE.w*sx),fl(FW_ZONE.h*sy));
   mc.fillStyle='#fff';mc.fillRect(fl(px*sx)-2,fl(py*sy)-2,4,4);
-}
-
-// ── COLLISION: block table interior ───────────────────────────
-function clampPos(nx,ny){
-  // Keep inside room
-  nx=Math.max(22,Math.min(W-22,nx));
-  ny=Math.max(TH+16,Math.min(H-16,ny));
-  // Block table interior (can walk around sides)
-  const bufX=12,bufY=8;
-  if(nx>TABLE_X-bufX&&nx<TABLE_X+TABLE_W+bufX&&ny>TABLE_Y+bufY&&ny<TABLE_Y+TABLE_H-bufY){
-    // Push to nearest side
-    const dLeft=nx-(TABLE_X-bufX);
-    const dRight=(TABLE_X+TABLE_W+bufX)-nx;
-    const dTop=ny-(TABLE_Y+bufY);
-    const dBottom=(TABLE_Y+TABLE_H-bufY)-ny;
-    const minD=Math.min(dLeft,dRight,dTop,dBottom);
-    if(minD===dLeft)nx=TABLE_X-bufX;
-    else if(minD===dRight)nx=TABLE_X+TABLE_W+bufX;
-    else if(minD===dTop)ny=TABLE_Y+bufY;
-    else ny=TABLE_Y+TABLE_H-bufY;
-  }
-  return{x:nx,y:ny};
 }
 
 // ── GAME LOOP ─────────────────────────────────────────────────
 const SPEED=2.5;
 function loop(t){
   let dx=0,dy=0;
-  if(keys['ArrowLeft'] ||keys['a']||keys['A'])dx=-1;
-  if(keys['ArrowRight']||keys['d']||keys['D'])dx= 1;
-  if(keys['ArrowUp']   ||keys['w']||keys['W'])dy=-1;
-  if(keys['ArrowDown'] ||keys['s']||keys['S'])dy= 1;
+  if(keys['ArrowLeft']||keys['a']||keys['A'])dx=-1;if(keys['ArrowRight']||keys['d']||keys['D'])dx=1;
+  if(keys['ArrowUp']||keys['w']||keys['W'])dy=-1;if(keys['ArrowDown']||keys['s']||keys['S'])dy=1;
   const anyKey=dx||dy;if(anyKey)clickTarget=null;
-  if(!anyKey&&clickTarget&&!activeZone){
-    const cdx=clickTarget.x-px,cdy=clickTarget.y-py;
-    const d=Math.hypot(cdx,cdy);
-    if(d<3)clickTarget=null;
-    else{dx=cdx/d;dy=cdy/d;}
-  }
+  if(!anyKey&&clickTarget&&!activeZone){const cdx=clickTarget.x-px,cdy=clickTarget.y-py;const d=Math.hypot(cdx,cdy);if(d<3)clickTarget=null;else{dx=cdx/d;dy=cdy/d;}}
   if((dx||dy)&&!activeZone){
-    const len=Math.sqrt(dx*dx+dy*dy)||1;
-    const np=clampPos(px+dx/len*SPEED,py+dy/len*SPEED);
-    px=np.x;py=np.y;
-    if(dx!==0)facingDir=dx<0?-1:1;
-    walkFrame++;drawPlayer(walkFrame,facingDir);syncPlayer();
+    const len=Math.sqrt(dx*dx+dy*dy)||1;const np=clampPos(px+dx/len*SPEED,py+dy/len*SPEED);
+    px=np.x;py=np.y;if(dx!==0)facingDir=dx<0?-1:1;walkFrame++;drawPlayer(walkFrame,facingDir);syncPlayer();
   }
-
-  // Zone detection
   const inTF=px>TF_ZONE.x&&px<TF_ZONE.x+TF_ZONE.w&&py>TF_ZONE.y&&py<TF_ZONE.y+TF_ZONE.h;
   const inFW=px>FW_ZONE.x&&px<FW_ZONE.x+FW_ZONE.w&&py>FW_ZONE.y&&py<FW_ZONE.y+FW_ZONE.h;
-  if(inTF&&!activeZone)openTF();
-  else if(!inTF&&activeZone==='tinyfish')closeTF();
-  if(inFW&&!activeZone)openFW();
-  else if(!inFW&&activeZone==='fireworks')closeFW();
-
-  drawOverlay(t);
-  drawMinimap();
-  requestAnimationFrame(loop);
+  if(inTF&&!activeZone)openTF();else if(!inTF&&activeZone==='tinyfish')closeTF();
+  if(inFW&&!activeZone)openFW();else if(!inFW&&activeZone==='fireworks')closeFW();
+  drawOverlay(t);drawMinimap();requestAnimationFrame(loop);
 }
 
-// Fade in on arrival
 const cover=document.getElementById('cover');
 cover.style.opacity='1';
 setTimeout(()=>{cover.style.transition='opacity .5s';cover.style.opacity='0';setTimeout(()=>cover.classList.remove('on'),500);},80);
-
+loadUsage();
 requestAnimationFrame(loop);
 </script>
 </body>
