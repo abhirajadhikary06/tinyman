@@ -10,7 +10,7 @@ router = APIRouter(prefix="/auth", tags=["auth"])
 oauth_complete_router = APIRouter(prefix="/oauth/complete", tags=["auth"])
 
 load_dotenv()
-APP_BASE_URL = "https://tinyman-d9ka.onrender.com"
+APP_BASE_URL = os.getenv("APP_BASE_URL", "https://tinyman.netlify.app").rstrip("/")
 
 PROVIDERS = {
     "google": {
